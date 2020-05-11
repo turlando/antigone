@@ -47,4 +47,8 @@
 
     services.openssh.enable = true;
     services.openssh.permitRootLogin = "yes";
+
+    environment.systemPackages = with pkgs; [
+        gnumake
+    ];
 }
