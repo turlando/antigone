@@ -50,5 +50,20 @@
 
   environment.systemPackages = with pkgs; [
     gnumake
+    zsh grml-zsh-config
   ];
+
+  programs = {
+    zsh = {
+      enable = true;
+      promptInit = ""; # unset to use grml prompt
+      interactiveShellInit = ''
+        source ${pkgs.grml-zsh-config}/etc/zsh/zshrc
+      '';
+    };
+  };
+
+  users = {
+    defaultUserShell = pkgs.zsh;
+  };
 }
