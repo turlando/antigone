@@ -49,6 +49,7 @@
   services.openssh.permitRootLogin = "yes";
 
   environment.systemPackages = with pkgs; [
+    lm_sensors hddtemp
     gnumake
     zsh grml-zsh-config
     tmux
