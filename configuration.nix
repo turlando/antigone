@@ -51,6 +51,7 @@
   environment.systemPackages = with pkgs; [
     gnumake
     zsh grml-zsh-config
+    tmux
   ];
 
   programs = {
