@@ -1,54 +1,54 @@
 { config, pkgs, ... }:
 
 {
-    system.stateVersion = "20.03";
+  system.stateVersion = "20.03";
 
-    imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix ];
 
-    boot = {
-        loader.grub = {
-            enable = true;
-            version = 2;
-            devices = [ "/dev/disk/by-path/pci-0000:02:00.0-usb-0:1:1.0-scsi-0:0:0:0"
-                        "/dev/disk/by-path/pci-0000:02:00.0-usb-0:2:1.0-scsi-0:0:0:0" ];
+  boot = {
+    loader.grub = {
+      enable = true;
+      version = 2;
+      devices = [ "/dev/disk/by-path/pci-0000:02:00.0-usb-0:1:1.0-scsi-0:0:0:0"
+                  "/dev/disk/by-path/pci-0000:02:00.0-usb-0:2:1.0-scsi-0:0:0:0" ];
+    };
+
+    initrd = {
+      kernelModules = [ "r8169" ];
+      network = {
+        enable = true;
+        ssh = {
+          enable = true;
+          port = 2222;
+          hostRSAKey = /etc/secrets/dropbear_host_rsa_key;
+          authorizedKeys = [ (builtins.readFile "/root/ssh-boot-tancredi.pub") ];
         };
-
-        initrd = {
-            kernelModules = [ "r8169" ];
-            network = {
-                enable = true;
-                ssh = {
-                    enable = true;
-                    port = 2222;
-                    hostRSAKey = /etc/secrets/dropbear_host_rsa_key;
-                    authorizedKeys = [ (builtins.readFile "/root/ssh-boot-tancredi.pub") ];
-                };
-            };
-        };
-
-        supportedFilesystems = [ "zfs" ];
-        tmpOnTmpfs = true;
+      };
     };
 
-    networking = {
-        hostName = "antigone";
-        useDHCP = false;
-        interfaces.enp3s0.useDHCP = true;
-        hostId = "4d86c32a";
-    };
+    supportedFilesystems = [ "zfs" ];
+    tmpOnTmpfs = true;
+  };
 
-    i18n.defaultLocale = "en_US.UTF-8";
-    console = {
-        font = "Lat2-Terminus16";
-        keyMap = "us";
-    };
+  networking = {
+    hostName = "antigone";
+    useDHCP = false;
+    interfaces.enp3s0.useDHCP = true;
+    hostId = "4d86c32a";
+  };
 
-    time.timeZone = "UTC";
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "us";
+  };
 
-    services.openssh.enable = true;
-    services.openssh.permitRootLogin = "yes";
+  time.timeZone = "UTC";
 
-    environment.systemPackages = with pkgs; [
-        gnumake
-    ];
+  services.openssh.enable = true;
+  services.openssh.permitRootLogin = "yes";
+
+  environment.systemPackages = with pkgs; [
+    gnumake
+  ];
 }
