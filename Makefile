@@ -8,3 +8,11 @@ all: /etc/nixos/configuration.nix          \
 
 /etc/secrets/dropbear_host_rsa_key:
 	nix-shell -p dropbear --command "dropbearkey -t rsa -s 4096 -f $@"
+
+.PHONY: switch
+switch:
+	nixos-rebuild switch
+
+.PHONY: clean
+clean:
+	nix-collect-garbage -d
