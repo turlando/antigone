@@ -64,12 +64,4 @@ mount -t zfs system/nix /mnt/nix
 
 nixos-generate-config --root /mnt
 
-##################################################
-# boot.loader.grub.devices = [ "/dev/disk/by-path/pci-0000:02:00.0-usb-0:1:1.0-scsi-0:0:0:0"
-#                              "/dev/disk/by-path/pci-0000:02:00.0-usb-0:2:1.0-scsi-0:0:0:0"
-#                            ];
-# boot.supportedFilesystems = [ "zfs" ];
-# networking.hostId = "deadbeef"; # openssl rand -hex 4
-##################################################
-
 nixos-install
