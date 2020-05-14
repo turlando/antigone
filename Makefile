@@ -13,6 +13,10 @@ all: /etc/nixos/configuration.nix          \
 switch:
 	nixos-rebuild switch
 
+.PHONY: update
+update:
+	nix-channel --update
+
 .PHONY: clean
 clean:
 	nix-collect-garbage -d
