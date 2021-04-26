@@ -31,6 +31,7 @@
   fileSystems."/home/tancredi" =
     { device = "home/tancredi";
       fsType = "zfs";
+      neededForBoot = true;
     };
 
   swapDevices = [ ];

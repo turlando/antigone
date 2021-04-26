@@ -20,7 +20,8 @@
         ssh = {
           enable = true;
           port = 2222;
-          hostRSAKey = /etc/secrets/dropbear_host_rsa_key;
+          hostKeys = [ "/etc/secrets/initrd_ssh_host_rsa_key"
+                       "/etc/secrets/initrd_ssh_host_ed25519_key" ];
           authorizedKeys = [ (builtins.readFile ./ssh-keys/boot.pub) ];
         };
       };

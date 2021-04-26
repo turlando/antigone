@@ -1,0 +1,4 @@
+1. ssh -p 2222 -l root host
+2. import home
+3. zfs load-keys -a
+4. pkill zfs
