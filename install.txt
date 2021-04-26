@@ -65,3 +65,23 @@ mount -t zfs system/nix /mnt/nix
 nixos-generate-config --root /mnt
 
 nixos-install
+
+zpool create                                                \
+      -m none                                               \
+      -o ashift=12                                          \
+      -o altroot=/mnt                                       \
+      -O canmount=off                                       \
+      -O checksum=fletcher4                                 \
+      -O compression=lz4                                    \
+      -O xattr=sa                                           \
+      -O normalization=formD                                \
+      -O atime=off                                          \
+      -O encryption=aes-256-gcm                             \
+      -O keyformat=passphrase -O keylocation=prompt         \
+      home                                                  \
+      /dev/disk/by-id/ata-CT500MX500SSD1_1944E225D422
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    home/tancredi
