@@ -45,8 +45,11 @@
 
   time.timeZone = "UTC";
 
-  services.openssh.enable = true;
-  services.openssh.permitRootLogin = "yes";
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;
+    permitRootLogin = "prohibit-password";
+  };
 
   environment.systemPackages = with pkgs; [
     lm_sensors hddtemp
@@ -66,6 +69,16 @@
   };
 
   users = {
+    mutableUsers = false;
     defaultUserShell = pkgs.zsh;
+
+    users.root = {
+      openssh.authorizedKeys.keyFiles = [ ./ssh-keys/tancredi.pub ];
+    };
+
+    users.tancredi = {
+      isNormalUser = true;
+      openssh.authorizedKeys.keyFiles = [ ./ssh-keys/tancredi.pub ];
+    };
   };
 }
