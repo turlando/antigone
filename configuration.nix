@@ -21,7 +21,7 @@
           enable = true;
           port = 2222;
           hostRSAKey = /etc/secrets/dropbear_host_rsa_key;
-          authorizedKeys = [ (builtins.readFile "/root/ssh-boot-tancredi.pub") ];
+          authorizedKeys = [ (builtins.readFile ./ssh-keys/boot.pub) ];
         };
       };
     };
