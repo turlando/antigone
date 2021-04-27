@@ -54,9 +54,15 @@
 
   environment.systemPackages = with pkgs; [
     lm_sensors hddtemp
-    gnumake
     zsh grml-zsh-config
     tmux
+    gnumake
+    git
+    (emacs.override { withGTK2 = false; withGTK3 = false; })
+  ];
+
+  fonts.fonts = with pkgs; [
+    source-code-pro
   ];
 
   programs = {
