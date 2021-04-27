@@ -50,6 +50,7 @@
     enable = true;
     passwordAuthentication = false;
     permitRootLogin = "prohibit-password";
+    forwardX11 = true;
   };
 
   environment.systemPackages = with pkgs; [
