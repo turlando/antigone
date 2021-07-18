@@ -29,7 +29,7 @@
     };
 
   fileSystems."/home/tancredi" =
-    { device = "home/tancredi";
+    { device = "fast-storage/home/tancredi";
       fsType = "zfs";
       neededForBoot = true;
     };

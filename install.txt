@@ -78,6 +78,7 @@ zpool create                                                \
       -m none                                               \
       -o ashift=12                                          \
       -o altroot=/mnt                                       \
+      -O quota=750G                                         \
       -O canmount=off                                       \
       -O checksum=fletcher4                                 \
       -O compression=lz4                                    \
@@ -86,10 +87,15 @@ zpool create                                                \
       -O atime=off                                          \
       -O encryption=aes-256-gcm                             \
       -O keyformat=passphrase -O keylocation=prompt         \
-      home                                                  \
-      /dev/disk/by-id/ata-CT500MX500SSD1_1944E225D422
+      -f                                                    \
+      fast-storage                                          \
+      /dev/disk/by-id/ata-SanDisk_SDSSDH3_1T00_21153B453502
+
+zfs create               \
+    -o mountpoint=legacy \
+    fast-storage/home
 
 zfs create               \
     -o acltype=posixacl  \
     -o mountpoint=legacy \
-    home/tancredi
+    fast-storage/home/tancredi
