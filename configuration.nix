@@ -55,6 +55,10 @@
     forwardX11 = true;
   };
 
+  services.apcupsd = {
+    enable = true;
+  };
+
   environment.systemPackages = with pkgs; [
     lm_sensors hddtemp
     zsh grml-zsh-config
