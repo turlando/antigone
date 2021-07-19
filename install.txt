@@ -1,6 +1,8 @@
+################################################################################
 ##
 ## Initial install
 ##
+################################################################################
 
 sgdisk --zap-all /dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_01012*
 sgdisk --zap-all /dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_01013*
@@ -70,9 +72,12 @@ nixos-generate-config --root /mnt
 
 nixos-install
 
+
+################################################################################
 ##
-## Add SSD for /home
+## Add fast-storage ZFS pool
 ##
+################################################################################
 
 zpool create                                                \
       -m none                                               \
