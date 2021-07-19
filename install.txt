@@ -38,6 +38,7 @@ zpool create                                                \
       -m none                                               \
       -o ashift=12                                          \
       -o altroot=/mnt                                       \
+      -O quota=50G                                          \
       -O canmount=off                                       \
       -O checksum=fletcher4                                 \
       -O compression=lz4                                    \
