@@ -76,6 +76,13 @@
         source ${pkgs.grml-zsh-config}/etc/zsh/zshrc
       '';
     };
+
+    neovim = {
+      enable = true;
+      viAlias = true;
+      vimAlias = true;
+      defaultEditor = true;
+    };
   };
 
   users = {
