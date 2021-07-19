@@ -34,7 +34,7 @@
   networking = {
     hostName = "antigone";
     useDHCP = false;
-    interfaces.enp3s0.useDHCP = true;
+    interfaces.enp4s0.useDHCP = true;
     hostId = "4d86c32a";
   };
 
