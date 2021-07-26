@@ -3,7 +3,9 @@
 {
   system.stateVersion = "20.03";
 
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix
+              ./services/quassel.nix
+            ];
 
   boot = {
     loader.grub = {

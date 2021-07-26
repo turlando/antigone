@@ -98,7 +98,6 @@ zpool create                                                \
       /dev/disk/by-id/ata-SanDisk_SDSSDH3_1T00_21153B453502
 
 zfs create               \
-    -o mountpoint=legacy \
     fast-storage/home
 
 zfs create               \
@@ -133,3 +132,18 @@ zpool create                                                  \
       mirror                                                  \
       /dev/disk/by-id/ata-HGST_HUS724040ALA640_PN1334PBJX3R3S \
       /dev/disk/by-id/ata-HGST_HUS724040ALA640_PN2334PBJTM5GT
+
+
+################################################################################
+##
+## Add services filesystems
+##
+################################################################################
+
+zfs create                \
+    fast-storage/services
+
+zfs create                        \
+    -o acltype=posixacl           \
+    -o mountpoint=legacy          \
+    fast-storage/services/quassel
