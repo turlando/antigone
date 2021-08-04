@@ -11,8 +11,8 @@
     loader.grub = {
       enable = true;
       version = 2;
-      devices = [ "/dev/disk/by-path/pci-0000:02:00.0-usb-0:1:1.0-scsi-0:0:0:0"
-                  "/dev/disk/by-path/pci-0000:02:00.0-usb-0:2:1.0-scsi-0:0:0:0" ];
+      devices = [ "/dev/disk/by-path/pci-0000:03:00.0-usb-0:1:1.0-scsi-0:0:0:0"
+                  "/dev/disk/by-path/pci-0000:03:00.0-usb-0:2:1.0-scsi-0:0:0:0" ];
     };
 
     initrd = {
