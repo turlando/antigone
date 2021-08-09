@@ -63,6 +63,7 @@
 
   environment.systemPackages = with pkgs; [
     lm_sensors hddtemp
+    cryptsetup
     zsh grml-zsh-config
     tmux
     gnumake
