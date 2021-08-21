@@ -1,4 +1,4 @@
 1. ssh -p 2222 -l root host
-2. zpool import fast-storage
+2. zpool import -a
 3. zfs load-key -a
 4. pkill zfs
