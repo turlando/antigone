@@ -147,3 +147,20 @@ zfs create                        \
     -o acltype=posixacl           \
     -o mountpoint=legacy          \
     fast-storage/services/quassel
+
+
+################################################################################
+##
+## Add media filesystems
+##
+################################################################################
+
+zfs create              \
+    -o compression=off  \
+    -o mountpoint=none  \
+    large-storage/music
+
+zfs create                  \
+    -o compression=off      \
+    -o mountpoint=legacy    \
+    large-storage/music/edm

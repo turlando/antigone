@@ -31,7 +31,11 @@
   fileSystems."/home/tancredi" =
     { device = "fast-storage/home/tancredi";
       fsType = "zfs";
-      neededForBoot = true;
+    };
+
+  fileSystems."/mnt/music/edm" =
+    { device = "large-storage/music/edm";
+      fsType = "zfs";
     };
 
   swapDevices = [ ];
