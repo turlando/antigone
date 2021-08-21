@@ -97,6 +97,7 @@
     defaultUserShell = pkgs.zsh;
 
     users.root = {
+      hashedPassword = "$6$FSwdvci6$jhZ2Ge5tbaYquhuo9.0S1jGwVyIttqXvmlCXRVoZ4BlC.tsTyOcRjJ.iiyREF57zOk/GG/wClazVwVL3NqlQ/0";
       openssh.authorizedKeys.keyFiles = [ ./ssh-keys/tancredi.pub ];
     };
 
