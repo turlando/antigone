@@ -33,11 +33,6 @@
       fsType = "zfs";
     };
 
-  fileSystems."/mnt/music/edm" =
-    { device = "large-storage/music/edm";
-      fsType = "zfs";
-    };
-
   swapDevices = [ ];
 
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
