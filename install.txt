@@ -147,3 +147,14 @@ zfs create                        \
     -o acltype=posixacl           \
     -o mountpoint=legacy          \
     fast-storage/services/quassel
+
+
+################################################################################
+##
+## Add storage filesystems
+##
+################################################################################
+
+zfs create               \
+    -o mountpoint=legacy \
+    large-storage/books

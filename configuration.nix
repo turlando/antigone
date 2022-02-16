@@ -4,6 +4,7 @@
   system.stateVersion = "20.03";
 
   imports = [ ./hardware-configuration.nix
+              ./storage.nix
               ./services/quassel.nix
             ];
 
