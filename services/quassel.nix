@@ -1,4 +1,4 @@
-{ ...}:
+{ ... }:
 
 {
   fileSystems."/srv/quassel" =
@@ -7,7 +7,9 @@
     };
 
   containers.quassel =
-    { bindMounts =
+    { autoStart = true;
+
+      bindMounts =
         { "/data" =
             { hostPath = "/srv/quassel";
               isReadOnly = false;
