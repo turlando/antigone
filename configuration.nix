@@ -38,7 +38,7 @@
   networking = {
     hostName = "antigone";
     useDHCP = false;
-    interfaces.enp4s0.useDHCP = true;
+    interfaces.eth0.useDHCP = true;
     hostId = "4d86c32a";
   };
 
@@ -51,6 +51,11 @@
   time.timeZone = "UTC";
 
   security.sudo.enable = true;
+
+  services.udev.extraRules =
+    ''
+    SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="f4:6d:04:7b:d3:0e", NAME="eth0"
+    '';
 
   services.openssh = {
     enable = true;
