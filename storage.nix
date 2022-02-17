@@ -12,6 +12,7 @@
         mkdir /mnt/storage/books
       fi
       chown nobody:storage-books /mnt/storage/books
+      chmod u=rwX,g=rwX,o=X /mnt/storage/books
       '';
       deps = [ "users" "groups" ];
     };

@@ -6,6 +6,7 @@
   imports = [ ./hardware-configuration.nix
               ./storage.nix
               ./services/quassel.nix
+              ./services/syncthing.nix
             ];
 
   boot = {
@@ -104,7 +105,9 @@
 
     users.tancredi = {
       isNormalUser = true;
-      extraGroups = [ "wheel" ];
+      extraGroups = [ "wheel"
+                      config.users.groups.storage-books.name
+                    ];
       hashedPassword = "$6$FSwdvci6$jhZ2Ge5tbaYquhuo9.0S1jGwVyIttqXvmlCXRVoZ4BlC.tsTyOcRjJ.iiyREF57zOk/GG/wClazVwVL3NqlQ/0";
       openssh.authorizedKeys.keyFiles = [ ./ssh-keys/tancredi.pub ];
     };
