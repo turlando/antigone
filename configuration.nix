@@ -24,7 +24,7 @@
           port = 2222;
           hostKeys = [ "/etc/secrets/initrd_ssh_host_rsa_key"
                        "/etc/secrets/initrd_ssh_host_ed25519_key" ];
-          authorizedKeys = [ (builtins.readFile ./ssh-keys/boot.pub) ];
+          authorizedKeys = [ (builtins.readFile ./_files/ssh-keys/boot.pub) ];
         };
       };
     };
@@ -91,7 +91,7 @@
 
     users.root = {
       hashedPassword = "$6$FSwdvci6$jhZ2Ge5tbaYquhuo9.0S1jGwVyIttqXvmlCXRVoZ4BlC.tsTyOcRjJ.iiyREF57zOk/GG/wClazVwVL3NqlQ/0";
-      openssh.authorizedKeys.keyFiles = [ ./ssh-keys/tancredi.pub ];
+      openssh.authorizedKeys.keyFiles = [ ./_files/ssh-keys/tancredi.pub ];
     };
 
     users.tancredi = {
@@ -100,7 +100,7 @@
                       config.users.groups.storage-books.name
                     ];
       hashedPassword = "$6$FSwdvci6$jhZ2Ge5tbaYquhuo9.0S1jGwVyIttqXvmlCXRVoZ4BlC.tsTyOcRjJ.iiyREF57zOk/GG/wClazVwVL3NqlQ/0";
-      openssh.authorizedKeys.keyFiles = [ ./ssh-keys/tancredi.pub ];
+      openssh.authorizedKeys.keyFiles = [ ./_files/ssh-keys/tancredi.pub ];
     };
   };
 }
