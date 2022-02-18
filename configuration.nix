@@ -5,8 +5,7 @@
 
   imports = [ ./hardware-configuration.nix
               ./storage.nix
-              ./services/quassel.nix
-              ./services/syncthing.nix
+              ./services
             ];
 
   boot = {
