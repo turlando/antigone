@@ -1,11 +1,14 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix
-              ./system
-              ./storage.nix
-              ./services
-            ];
+  imports = [
+    ./hardware-configuration.nix
+    ./system
+    ./storage.nix
+    ./services
+  ];
+
+  _module.args.utils = import ./utils.nix {};
 
   boot = {
     loader.grub = {
@@ -82,25 +85,6 @@
       viAlias = true;
       vimAlias = true;
       defaultEditor = true;
-    };
-  };
-
-  users = {
-    mutableUsers = false;
-    defaultUserShell = pkgs.zsh;
-
-    users.root = {
-      hashedPassword = "$6$FSwdvci6$jhZ2Ge5tbaYquhuo9.0S1jGwVyIttqXvmlCXRVoZ4BlC.tsTyOcRjJ.iiyREF57zOk/GG/wClazVwVL3NqlQ/0";
-      openssh.authorizedKeys.keyFiles = [ ./_files/ssh-keys/tancredi.pub ];
-    };
-
-    users.tancredi = {
-      isNormalUser = true;
-      extraGroups = [ "wheel"
-                      config.users.groups.storage-books.name
-                    ];
-      hashedPassword = "$6$FSwdvci6$jhZ2Ge5tbaYquhuo9.0S1jGwVyIttqXvmlCXRVoZ4BlC.tsTyOcRjJ.iiyREF57zOk/GG/wClazVwVL3NqlQ/0";
-      openssh.authorizedKeys.keyFiles = [ ./_files/ssh-keys/tancredi.pub ];
     };
   };
 }
