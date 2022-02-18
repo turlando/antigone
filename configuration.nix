@@ -1,9 +1,8 @@
 { config, pkgs, ... }:
 
 {
-  system.stateVersion = "20.03";
-
   imports = [ ./hardware-configuration.nix
+              ./system
               ./storage.nix
               ./services
             ];
@@ -34,13 +33,6 @@
     tmpOnTmpfs = true;
   };
 
-  networking = {
-    hostName = "antigone";
-    useDHCP = false;
-    interfaces.eth0.useDHCP = true;
-    hostId = "4d86c32a";
-  };
-
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
     font = "Lat2-Terminus16";
@@ -50,11 +42,6 @@
   time.timeZone = "UTC";
 
   security.sudo.enable = true;
-
-  services.udev.extraRules =
-    ''
-    SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="f4:6d:04:7b:d3:0e", NAME="eth0"
-    '';
 
   services.openssh = {
     enable = true;
