@@ -1,30 +1,22 @@
 { config, pkgs, utils, ... }:
 
-let
-
-  # type: string -> path
-  getKey = user: utils.getFile (/ssh-keys + "/${user}.pub");
-
-  # type: string -> string
-  getPassword = user: utils.readFile (/hashed-passwords + "/${user}.txt");
-
-in
-
 {
+  security.sudo.enable = true;
+
   users = {
     mutableUsers = false;
     defaultUserShell = pkgs.zsh;
 
     users = {
       root = {
-        hashedPassword = getPassword "tancredi";
-        openssh.authorizedKeys.keyFiles = [ (getKey "tancredi") ];
+        hashedPassword = utils.readPassword "tancredi";
+        openssh.authorizedKeys.keyFiles = [ (utils.getSshKey "tancredi") ];
       };
 
       tancredi = {
         isNormalUser = true;
-        hashedPassword = getPassword "tancredi";
-        openssh.authorizedKeys.keyFiles = [ (getKey "tancredi") ];
+        hashedPassword = utils.readPassword "tancredi";
+        openssh.authorizedKeys.keyFiles = [ (utils.getSshKey "tancredi") ];
 
         extraGroups = [
           "wheel"

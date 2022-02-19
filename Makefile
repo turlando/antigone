@@ -1,14 +1,9 @@
 ###############################################################################
 
-.PHONY: all
-all: upgrade
-
-###############################################################################
-
 NIX_CHANNEL := nix-channel
 NIXOS_REBUILD := nixos-rebuild -I nixos-config=configuration.nix
 NIX_COLLECT_GARBAGE := nix-collect-garbage
-NIX_REPL := nix repl -I nixos-config=configuration.nix '<nixpkgs/nixos>'
+NIX_REPL := nix repl -I nixos-config=configuration.nix
 
 ###############################################################################
 
@@ -44,6 +39,6 @@ upgrade: update switch
 
 .PHONY: repl
 repl:
-	$(NIX_REPL)
+	$(NIX_REPL) '<nixpkgs/nixos>'
 
 ###############################################################################
