@@ -22,7 +22,9 @@
 
       config =
         { ... }:
-        { users.groups =
+        { system.stateVersion = "21.11";
+
+          users.groups =
             { storage-books = config.users.groups.storage-books;
             };
 

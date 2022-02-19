@@ -18,7 +18,9 @@
 
       config =
         { config, pkgs, ... }:
-        { environment.systemPackages =
+        { system.stateVersion = "21.11";
+
+          environment.systemPackages =
             [
               ## So that I can run:
               # nixos-container root-login quassel
