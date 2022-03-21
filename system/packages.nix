@@ -2,8 +2,12 @@
 
 {
   environment.systemPackages = with pkgs; [
+    pciutils
+    usbutils
+
     cryptsetup
 
+    smartmontools
     lm_sensors
     hddtemp
 
