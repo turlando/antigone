@@ -11,13 +11,11 @@ let
     };
 
   # type: iface -> str
-  udevRule = x:
+  udevRule = { name, mac }:
     ''
-    SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="${x.mac}", NAME="${x.name}"
+    SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="${mac}", NAME="${name}"
     '';
-
 in
-
 {
   # This also applies to initrd.
   services.udev.extraRules = udevRule eth0;
