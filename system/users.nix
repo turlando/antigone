@@ -20,7 +20,7 @@
 
         extraGroups = [
           "wheel"
-          config.users.groups.storage-books.name
+          config.users.groups.storage.name
         ];
       };
     };

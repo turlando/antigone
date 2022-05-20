@@ -8,5 +8,6 @@
     ./users.nix
     ./packages.nix
     ./daemons.nix
+    ./storage.nix
   ];
 }

@@ -25,20 +25,11 @@
         { system.stateVersion = "21.11";
 
           users.groups =
-            { storage-books = config.users.groups.storage-books;
+            { storage = config.users.groups.storage;
             };
 
           users.users.syncthing =
-            { extraGroups = [ config.users.groups.storage-books.name ];
-            };
-
-          system.activationScripts.data-permissions =
-            { text =
-              ''
-              chown syncthing /data
-              chown syncthing /mnt/storage/books
-              '';
-              deps = [ "users" "groups" ];
+            { extraGroups = [ config.users.groups.storage.name ];
             };
 
           services.syncthing =
