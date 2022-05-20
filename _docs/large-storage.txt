@@ -1,0 +1,48 @@
+################################################################################
+##
+## Add large-storage ZFS pool
+##
+################################################################################
+
+zpool create                                                  \
+      -m none                                                 \
+      -o ashift=12                                            \
+      -o altroot=/mnt                                         \
+      -O quota=6400G                                          \
+      -O canmount=off                                         \
+      -O checksum=fletcher4                                   \
+      -O compression=lz4                                      \
+      -O xattr=sa                                             \
+      -O normalization=formD                                  \
+      -O atime=off                                            \
+      -O encryption=aes-256-gcm                               \
+      -O keyformat=passphrase -O keylocation=prompt           \
+      -f                                                      \
+      large-storage                                           \
+      mirror                                                  \
+      /dev/disk/by-id/ata-HGST_HUS724040ALA640_PN1334PBJMA8AS \
+      /dev/disk/by-id/ata-HGST_HUS724040ALA640_PN1334PBJN6DGS \
+      mirror                                                  \
+      /dev/disk/by-id/ata-HGST_HUS724040ALA640_PN1334PBJX3R3S \
+      /dev/disk/by-id/ata-HGST_HUS724040ALA640_PN2334PBJTM5GT
+
+
+################################################################################
+##
+## Add storage filesystems
+##
+################################################################################
+
+mkdir /mnt/storage
+
+################################################################################
+
+zfs create               \
+    -o mountpoint=legacy \
+    large-storage/books
+
+mkdir /mnt/storage/books
+chown nobody:storage /mnt/storage/books
+chmod g+s /mnt/storage/books
+
+################################################################################
