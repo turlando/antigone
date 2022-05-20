@@ -28,6 +28,10 @@ update:
 switch: $(SECRETS)
 	$(NIXOS_REBUILD) switch
 
+.PHONY: test
+test: $(SECRETS)
+	$(NIXOS_REBUILD) test
+
 .PHONY: clean
 clean:
 	$(NIX_COLLECT_GARBAGE) -d
