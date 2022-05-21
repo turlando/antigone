@@ -12,5 +12,9 @@
       { device = "large-storage/papers";
         fsType = "zfs";
       };
+    "/mnt/storage/unime" =
+      { device = "large-storage/unime";
+        fsType = "zfs";
+      };
   };
 }

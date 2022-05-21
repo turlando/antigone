@@ -22,6 +22,10 @@
             { hostPath = "/mnt/storage/papers";
               isReadOnly = false;
             };
+          "/mnt/storage/unime" =
+            { hostPath = "/mnt/storage/unime";
+              isReadOnly = false;
+            };
         };
 
       config =

@@ -45,8 +45,8 @@ zfs create               \
 mkdir /mnt/storage/books
 mount -t zfs large-storage/books /mnt/storage/books
 chown nobody:storage /mnt/storage/books
-chmod u=,g=rwXs,o= /mnt/storage/books
-setfacl -d -m u::000 -m g::rwX -m o::000 /mnt/storage/books
+chmod u=rwX,g=rwXs,o= /mnt/storage/books
+setfacl -d -m u::rwX -m g::rwX -m o::000 /mnt/storage/books
 
 ################################################################################
 
@@ -58,7 +58,20 @@ zfs create               \
 mkdir /mnt/storage/papers
 mount -t zfs large-storage/papers /mnt/storage/papers
 chown nobody:storage /mnt/storage/papers
-chmod u=,g=rwXs,o= /mnt/storage/papers
-setfacl -d -m u::000 -m g::rwX -m o::000 /mnt/storage/papers
+chmod u=rwX,g=rwXs,o= /mnt/storage/papers
+setfacl -d -m u::rwX -m g::rwX -m o::000 /mnt/storage/papers
+
+################################################################################
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    large-storage/unime
+
+mkdir /mnt/storage/unime
+mount -t zfs large-storage/unime /mnt/storage/unime
+chown nobody:storage /mnt/storage/unime
+chmod u=rwX,g=rwXs,o= /mnt/storage/unime
+setfacl -d -m u::rwX -m g::rwX -m o::000 /mnt/storage/unime
 
 ################################################################################
