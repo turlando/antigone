@@ -8,5 +8,9 @@
       { device = "large-storage/books";
         fsType = "zfs";
       };
+    "/mnt/storage/papers" =
+      { device = "large-storage/papers";
+        fsType = "zfs";
+      };
   };
 }

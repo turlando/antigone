@@ -18,6 +18,10 @@
             { hostPath = "/mnt/storage/books";
               isReadOnly = false;
             };
+          "/mnt/storage/papers" =
+            { hostPath = "/mnt/storage/papers";
+              isReadOnly = false;
+            };
         };
 
       config =

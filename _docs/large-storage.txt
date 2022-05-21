@@ -38,11 +38,27 @@ mkdir /mnt/storage
 ################################################################################
 
 zfs create               \
+    -o acltype=posixacl  \
     -o mountpoint=legacy \
     large-storage/books
 
 mkdir /mnt/storage/books
+mount -t zfs large-storage/books /mnt/storage/books
 chown nobody:storage /mnt/storage/books
-chmod g+s /mnt/storage/books
+chmod u=,g=rwXs,o= /mnt/storage/books
+setfacl -d -m u::000 -m g::rwX -m o::000 /mnt/storage/books
+
+################################################################################
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    large-storage/papers
+
+mkdir /mnt/storage/papers
+mount -t zfs large-storage/papers /mnt/storage/papers
+chown nobody:storage /mnt/storage/papers
+chmod u=,g=rwXs,o= /mnt/storage/papers
+setfacl -d -m u::000 -m g::rwX -m o::000 /mnt/storage/papers
 
 ################################################################################
