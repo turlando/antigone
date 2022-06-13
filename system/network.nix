@@ -9,16 +9,12 @@ let
     { name = "eth0";
       mac  = "f4:6d:04:7b:d3:0e";
     };
-
-  # type: iface -> str
-  udevRule = { name, mac }:
-    ''
-    SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="${mac}", NAME="${name}"
-    '';
 in
 {
-  # This also applies to initrd.
-  services.udev.extraRules = udevRule eth0;
+  systemd.network.links."10-${eth0.name}" = {
+    matchConfig.PermanentMACAddress = eth0.mac;
+    linkConfig.Name = eth0.name;
+  };
 
   networking = {
     hostName = hostname;
