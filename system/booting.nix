@@ -1,4 +1,4 @@
-{ utils, ... }:
+{ util, ... }:
 
 {
   boot.loader.grub = {
@@ -40,7 +40,7 @@
           "/etc/secrets/initrd_ssh_host_rsa_key"
           "/etc/secrets/initrd_ssh_host_ed25519_key"
         ];
-        authorizedKeys = [ (utils.readSshKey "boot") ];
+        authorizedKeys = [ (util.readSshKey "boot") ];
       };
     };
   };

@@ -7,5 +7,5 @@
   ];
 
   system.stateVersion = "20.03";
-  _module.args.utils = import ./utils.nix {};
+  _module.args.util = import ./util.nix {};
 }

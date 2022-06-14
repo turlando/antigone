@@ -1,4 +1,4 @@
-{ config, pkgs, utils, ... }:
+{ config, pkgs, util, ... }:
 
 {
   security.sudo.enable = true;
@@ -9,14 +9,14 @@
 
     users = {
       root = {
-        hashedPassword = utils.readPassword "tancredi";
-        openssh.authorizedKeys.keyFiles = [ (utils.getSshKey "tancredi") ];
+        hashedPassword = util.readPassword "tancredi";
+        openssh.authorizedKeys.keyFiles = [ (util.getSshKey "tancredi") ];
       };
 
       tancredi = {
         isNormalUser = true;
-        hashedPassword = utils.readPassword "tancredi";
-        openssh.authorizedKeys.keyFiles = [ (utils.getSshKey "tancredi") ];
+        hashedPassword = util.readPassword "tancredi";
+        openssh.authorizedKeys.keyFiles = [ (util.getSshKey "tancredi") ];
 
         extraGroups = [
           "wheel"
