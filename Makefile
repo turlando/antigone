@@ -4,6 +4,7 @@ NIX_CHANNEL := nix-channel
 NIXOS_REBUILD := nixos-rebuild -I nixos-config=configuration.nix
 NIX_COLLECT_GARBAGE := nix-collect-garbage
 NIX_REPL := nix repl -I nixos-config=configuration.nix
+NIXOS_GENERATE_CONFIG := nixos-generate-config
 
 ###############################################################################
 
@@ -38,6 +39,10 @@ clean:
 
 .PHONY: upgrade
 upgrade: update switch
+
+.PHONY: generate-hardware-config
+generate-hardware-config:
+	$(NIXOS_GENERATE_CONFIG) --dir .
 
 ###############################################################################
 

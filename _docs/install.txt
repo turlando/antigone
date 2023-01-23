@@ -4,44 +4,34 @@
 ##
 ################################################################################
 
-sgdisk --zap-all /dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_01012*
-sgdisk --zap-all /dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_01013*
+sgdisk --zap-all /dev/disk/by-id/ata-Lexar__SSD_NS100_512GB_MJ9527016149
+sgdisk --zap-all /dev/disk/by-id/ata-Lexar__SSD_NS100_512GB_MJ9527016260
 
-parted --script /dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_01012* \
-       mklabel gpt                                               \
-       mkpart grub-1     1M 2M                                   \
-       mkpart boot-1   2M 2G                                     \
-       mkpart system-1 2G 100%                                   \
-       set 1 bios_grub on                                        \
-       set 2 raid      on                                        \
-       set 2 boot      on
+parted --script /dev/disk/by-id/ata-Lexar__SSD_NS100_512GB_MJ9527016149
+       mklabel gpt                                                      \
+       mkpart grub-1    1 2M                                            \
+       mkpart boot-1   2M 4G                                            \
+       mkpart system-1 4G 100%                                          \
+       set 1 bios_grub on
 
-parted --script /dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_01013* \
-       mklabel gpt                                               \
-       mkpart grub-2   1M 2M                                     \
-       mkpart boot-2   2M 2G                                     \
-       mkpart system-2 2G 100%                                   \
-       set 1 bios_grub on                                        \
-       set 2 raid      on                                        \
-       set 2 boot      on
+parted --script /dev/disk/by-id/ata-Lexar__SSD_NS100_512GB_MJ9527016260
+       mklabel gpt                                                      \
+       mkpart grub-2    1 2M                                            \
+       mkpart boot-2   2M 4G                                            \
+       mkpart system-2 4G 100%                                          \
+       set 1 bios_grub on
 
-mdadm --create                      \
-      --homehost=any --level=1      \
-      --raid-devices=2              \
-      /dev/md/boot                  \
-      /dev/disk/by-partlabel/boot-1 \
-      /dev/disk/by-partlabel/boot-2
-
-mkfs.ext4 -L boot /dev/md/boot
+mkfs.ext4 -L boot-1 /dev/disk/by-partlabel/boot-1
+mkfs.ext4 -L boot-2 /dev/disk/by-partlabel/boot-2
 
 zpool create                                                \
       -m none                                               \
       -o ashift=12                                          \
       -o altroot=/mnt                                       \
-      -O quota=50G                                          \
+      -O quota=380G \ # ~ 80% of 472G, whic is the avail space
       -O canmount=off                                       \
       -O checksum=fletcher4                                 \
-      -O compression=lz4                                    \
+      -O compression=zstd                                   \
       -O xattr=sa                                           \
       -O normalization=formD                                \
       -O atime=off                                          \
@@ -61,13 +51,38 @@ zfs create               \
     -o mountpoint=legacy \
     system/root
 
+zfs snapshot             \
+    system/root@empty
+
+zfs create               \
+    -o acltype=posixacl
+    -o mountpoint=legacy
+    system/secrets
+
+zfs create               \
+    fast-storage/home
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    fast-storage/home/tancredi
+
+mkdir -p /mnt
 mount -t zfs system/root /mnt 
 
-mkdir /mnt/boot
-mount -t ext4 /dev/md/boot /mnt/boot
+mkdir -p /mnt/boot/1
+mkdir -p /mnt/boot/2
+mount -t ext4 /dev/disk/by-partlabel/boot-1 /mnt/boot/1
+mount -t ext4 /dev/disk/by-partlabel/boot-2 /mnt/boot/2
 
-mkdir /mnt/nix
+mkdir -p /mnt/nix
 mount -t zfs system/nix /mnt/nix
+
+mkidr -p /mnt/etc/secrets
+mount -t zfs system/secrets /mnt/etc/secrets
+
+mkdir -p /mnt/home/tancredi
+mount -t zfs system/home/tancredi /mnt/home/tancredi
 
 nixos-generate-config --root /mnt
 

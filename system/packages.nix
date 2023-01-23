@@ -5,8 +5,6 @@
     pciutils
     usbutils
 
-    cryptsetup
-
     smartmontools
     lm_sensors
     hddtemp
@@ -17,8 +15,6 @@
     tmux
     gnumake
     git
-
-    (emacs.override { withGTK2 = false; withGTK3 = false; })
   ];
 
   programs = {
@@ -37,8 +33,4 @@
       defaultEditor = true;
     };
   };
-
-  fonts.fonts = with pkgs; [
-    source-code-pro
-  ];
 }

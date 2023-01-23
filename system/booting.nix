@@ -1,49 +1,41 @@
-{ util, ... }:
+{ lib, util, ... }:
 
 {
   boot.loader.grub = {
     enable = true;
     version = 2;
-    devices = [
-      "/dev/disk/by-path/pci-0000:03:00.0-usb-0:1:1.0-scsi-0:0:0:0"
-      "/dev/disk/by-path/pci-0000:03:00.0-usb-0:2:1.0-scsi-0:0:0:0"
+    mirroredBoots = [
+      {
+        devices = [ "/dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016149" ];
+        path    = "/boot/1";
+      }
+      {
+        devices = [ "/dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016260" ];
+        path    = "/boot/2";
+      }
     ];
   };
 
-  # From hardware-configuration.nix
-  boot.kernelModules = [ "kvm-amd" ];
-
+  boot.initrd.kernelModules = [ "r8169" ];
   boot.supportedFilesystems = [ "zfs" ];
-  boot.tmpOnTmpfs = true;
 
-  boot.initrd = {
-    # From hardware-configuration.nix
-    availableKernelModules = [
-      "ahci"
-      "ohci_pci"
-      "ehci_pci"
-      "pata_jmicron"
-      "xhci_pci"
-      "usb_storage"
-      "sd_mod"
-    ];
+  boot.initrd.network = {
+    enable = true;
 
-    kernelModules = [ "r8169" ];
-
-    network = {
+    ssh = {
       enable = true;
-
-      ssh = {
-        enable = true;
-        port = 2222;
-        hostKeys = [
-          "/etc/secrets/initrd_ssh_host_rsa_key"
-          "/etc/secrets/initrd_ssh_host_ed25519_key"
-        ];
-        authorizedKeys = [ (util.readSshKey "boot") ];
-      };
+      port = 2222;
+      hostKeys = [
+        "/etc/secrets/initrd_ssh_host_rsa_key"
+        "/etc/secrets/initrd_ssh_host_ed25519_key"
+      ];
+      authorizedKeys = [ (util.readSshKey "boot") ];
     };
   };
 
-  hardware.cpu.amd.updateMicrocode = true;
+  boot.tmpOnTmpfs = true;
+
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    zfs rollback -r rpool/local/root@empty
+  '';
 }

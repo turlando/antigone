@@ -5,7 +5,6 @@
 
   users = {
     mutableUsers = false;
-    defaultUserShell = pkgs.zsh;
 
     users = {
       root = {
@@ -16,12 +15,13 @@
       tancredi = {
         isNormalUser = true;
         hashedPassword = util.readPassword "tancredi";
-        openssh.authorizedKeys.keyFiles = [ (util.getSshKey "tancredi") ];
+        shell = pkgs.zsh;
 
         extraGroups = [
           "wheel"
-          config.users.groups.storage.name
         ];
+
+        openssh.authorizedKeys.keyFiles = [ (util.getSshKey "tancredi") ];
       };
     };
   };

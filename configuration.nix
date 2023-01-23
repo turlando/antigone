@@ -2,10 +2,10 @@
 
 {
   imports = [
+    ./hardware-configuration.nix
     ./system
-    ./services
   ];
 
-  system.stateVersion = "20.03";
+  system.stateVersion = "22.11";
   _module.args.util = import ./util.nix {};
 }
