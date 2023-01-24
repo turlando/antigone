@@ -38,6 +38,11 @@
       fsType = "ext4";
     };
 
+  fileSystems."/state" =
+    { device = "system/state";
+      fsType = "zfs";
+    };
+
   fileSystems."/etc/secrets" =
     { device = "system/secrets";
       fsType = "zfs";

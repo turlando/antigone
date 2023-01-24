@@ -60,6 +60,11 @@ zfs create               \
     system/secrets
 
 zfs create               \
+    -o acltype=posixacl
+    -o mountpoint=legacy
+    system/state
+
+zfs create               \
     fast-storage/home
 
 zfs create               \
@@ -78,8 +83,8 @@ mount -t ext4 /dev/disk/by-partlabel/boot-2 /mnt/boot/2
 mkdir -p /mnt/nix
 mount -t zfs system/nix /mnt/nix
 
-mkidr -p /mnt/etc/secrets
-mount -t zfs system/secrets /mnt/etc/secrets
+mkidr -p /mnt/state
+mount -t zfs system/state /mnt/state
 
 mkdir -p /mnt/home/tancredi
 mount -t zfs system/home/tancredi /mnt/home/tancredi
