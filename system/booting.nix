@@ -14,6 +14,14 @@ let
         })
       (util.enumerate config.system.systemDrives);
 
+  sshHostKeys =
+    map
+      toString
+      [
+        (config.system.statePath + "/etc/ssh-initrd/ssh_host_rsa_key")
+        (config.system.statePath + "/etc/ssh-initrd/ssh_host_ed25519_key")
+      ];
+
 in
 
 {
@@ -32,10 +40,7 @@ in
     ssh = {
       enable = true;
       port = 2222;
-      hostKeys = [
-        "/etc/secrets/initrd_ssh_host_rsa_key"
-        "/etc/secrets/initrd_ssh_host_ed25519_key"
-      ];
+      hostKeys = sshHostKeys;
       authorizedKeys = [ (util.readSshKey "boot") ];
     };
   };

@@ -57,11 +57,6 @@ zfs snapshot             \
 zfs create               \
     -o acltype=posixacl
     -o mountpoint=legacy
-    system/secrets
-
-zfs create               \
-    -o acltype=posixacl
-    -o mountpoint=legacy
     system/state
 
 zfs create               \
