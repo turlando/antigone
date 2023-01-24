@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 
 rec {
   # type: path -> path
@@ -15,4 +15,7 @@ rec {
 
   # type: string -> string
   readPassword = x: readFile (/hashed-passwords + "/${x}.txt");
+
+  # type: [a] -> [{fst: int, snd: a}]
+  enumerate = xs: lib.zipLists (lib.range 0 (lib.length xs - 1)) xs;
 }

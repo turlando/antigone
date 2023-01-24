@@ -1,19 +1,26 @@
-{ lib, util, ... }:
+{ config, lib, util, ... }:
+
+let
+
+  grubMirroredBoots =
+    map ({fst, snd}:
+      let
+        drive = snd;
+        i     = toString (fst + 1);
+      in
+        {
+          devices = [ drive ];
+          path    = "/boot/${i}";
+        })
+      (util.enumerate config.system.systemDrives);
+
+in
 
 {
   boot.loader.grub = {
     enable = true;
     version = 2;
-    mirroredBoots = [
-      {
-        devices = [ "/dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016149" ];
-        path    = "/boot/1";
-      }
-      {
-        devices = [ "/dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016260" ];
-        path    = "/boot/2";
-      }
-    ];
+    mirroredBoots = grubMirroredBoots;
   };
 
   boot.initrd.kernelModules = [ "r8169" ];
