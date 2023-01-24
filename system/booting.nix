@@ -9,7 +9,7 @@ let
         i     = toString (fst + 1);
       in
         {
-          devices = [ drive ];
+          devices = [ (toString drive) ];
           path    = "/boot/${i}";
         })
       (util.enumerate config.system.systemDrives);
