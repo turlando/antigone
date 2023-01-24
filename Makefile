@@ -37,7 +37,7 @@ repl:
 ###############################################################################
 
 hardware-configuration.nix: .FORCE
-	$(NIXOS_GENERATE_CONFIG) --dir . --show-hardware-config > $@
+	$(NIXOS_GENERATE_CONFIG) --no-filesystems --show-hardware-config > $@
 
 ###############################################################################
 
