@@ -41,13 +41,20 @@ clean:
 upgrade: update switch
 
 .PHONY: generate-hardware-config
-generate-hardware-config:
-	$(NIXOS_GENERATE_CONFIG) --dir .
-
-###############################################################################
+generate-hardware-config: hardware-configuration.nix
 
 .PHONY: repl
 repl:
 	$(NIX_REPL) '<nixpkgs/nixos>'
+
+###############################################################################
+
+hardware-configuration.nix: .FORCE
+	$(NIXOS_GENERATE_CONFIG) --dir . --show-hardware-config > $@
+
+###############################################################################
+
+.PHONY: .FORCE
+.FORCE:
 
 ###############################################################################
