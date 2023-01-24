@@ -1,7 +1,12 @@
 { config, pkgs, util, ... }:
 
 {
-  security.sudo.enable = true;
+  security.sudo = {
+    enable = true;
+    extraConfig = ''
+      Defaults lecture="never"
+    '';
+  };
 
   users = {
     mutableUsers = false;
