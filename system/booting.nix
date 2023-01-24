@@ -43,6 +43,6 @@ in
   boot.tmpOnTmpfs = true;
 
   boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs rollback -r rpool/local/root@empty
+    zfs rollback -r system/root@empty
   '';
 }
