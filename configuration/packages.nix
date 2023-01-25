@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, localPkgs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -15,6 +15,8 @@
     tmux
     gnumake
     git
+
+    localPkgs.telegram-send
   ];
 
   programs = {
