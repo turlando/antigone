@@ -1,9 +1,13 @@
 { ... }:
 
 {
+  system.stateVersion = "22.11";
+
   imports = [
     ./options.nix
     ./configuration.nix
+
+    ./hardware-configuration.nix
 
     ./booting.nix
     ./filesystems.nix

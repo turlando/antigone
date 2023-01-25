@@ -1,10 +1,15 @@
 ###############################################################################
 
-NIX_CHANNEL := nix-channel
-NIXOS_REBUILD := nixos-rebuild -I nixos-config=configuration.nix
-NIX_COLLECT_GARBAGE := nix-collect-garbage
-NIX_REPL := nix repl -I nixos-config=configuration.nix
+NIXOS_CONFIG    := configuration.nix
+HARDWARE_CONFIG := configuration/hardware-configuration.nix
+
+NIX_PATH_OPTS := -I nixos-config=$(NIXOS_CONFIG)
+
 NIXOS_GENERATE_CONFIG := nixos-generate-config
+NIX_CHANNEL           := nix-channel
+NIXOS_REBUILD         := nixos-rebuild
+NIX_COLLECT_GARBAGE   := nix-collect-garbage
+NIX_REPL              := nix repl
 
 ###############################################################################
 
@@ -14,11 +19,11 @@ update:
 
 .PHONY: switch
 switch:
-	$(NIXOS_REBUILD) switch
+	$(NIXOS_REBUILD) $(NIX_PATH_OPTS) switch
 
 .PHONY: test
 test:
-	$(NIXOS_REBUILD) test
+	$(NIXOS_REBUILD) $(NIX_PATH_OPTS) test
 
 .PHONY: clean
 clean:
@@ -28,15 +33,15 @@ clean:
 upgrade: update switch
 
 .PHONY: generate-hardware-config
-generate-hardware-config: hardware-configuration.nix
+generate-hardware-config: $(HARDWARE_CONFIG)
 
 .PHONY: repl
 repl:
-	$(NIX_REPL) '<nixpkgs/nixos>'
+	$(NIX_REPL) $(NIX_PATH_OPTS) '<nixpkgs/nixos>'
 
 ###############################################################################
 
-hardware-configuration.nix: .FORCE
+$(HARDWARE_CONFIG): .FORCE
 	$(NIXOS_GENERATE_CONFIG) --no-filesystems --show-hardware-config > $@
 
 ###############################################################################
