@@ -18,8 +18,25 @@ let
     )
     echo $MESSAGE | ${notifyCmd} -c ${notifyConf} -r "$FROM" -s "$SUBJECT"
   '';
-in
 
+  upsOnBattery = pkgs.writeShellScript "ups-onbattery.sh" ''
+    set -e
+    HOSTNAME=${config.networking.hostName}
+    FROM="UPS"
+    SUBJECT="Power interruption at $HOSTNAME"
+    MESSAGE="A power interruption has been detected. Running on batteries."
+    echo $MESSAGE | ${notifyCmd} -c ${notifyConf} -r "$FROM" -s "$SUBJECT"
+  '';
+
+  upsOffBattery = pkgs.writeShellScript "ups-offbattery.sh" ''
+    set -e
+    HOSTNAME=${config.networking.hostName}
+    FROM="UPS"
+    SUBJECT="Power restored at $HOSTNAME"
+    MESSAGE="The power interruption is over. Running on mains."
+    echo $MESSAGE | ${notifyCmd} -c ${notifyConf} -r "$FROM" -s "$SUBJECT"
+  '';
+in
 {
   services.zfs.zed.settings = {
     ZED_EMAIL_ADDR = [ "root" ];
@@ -31,5 +48,13 @@ in
   services.smartd = {
     enable = true;
     extraOptions = [ "-w ${smartdNotify.outPath}" ];
+  };
+
+  services.apcupsd = {
+    enable = true;
+    hooks = {
+      onbattery = upsOnBattery.outPath;
+      offbattery = upsOffBattery.outPath;
+    };
   };
 }
