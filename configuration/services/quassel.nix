@@ -10,6 +10,10 @@
     ephemeral = true;
     autoStart = true;
     bindMounts = {
+      "/etc/resolv.conf" = {
+        hostPath = "/etc/resolv.conf";
+        isReadOnly = true;
+      };
       "/data" = {
         hostPath = "/var/services/quassel";
         isReadOnly = false;
