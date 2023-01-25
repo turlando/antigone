@@ -77,12 +77,12 @@ zfs create               \
     system/state
 
 zfs create               \
-    fast-storage/home
+    system/home
 
 zfs create               \
     -o acltype=posixacl  \
     -o mountpoint=legacy \
-    fast-storage/home/tancredi
+    system/home/tancredi
 
 # Mount partitions
 # ~~~~~~~~~~~~~~~~
@@ -121,3 +121,22 @@ nixos-install
 #    zfs load-key -a
 #    pkill zfs        # To kill the process asking for a password at the tty
 #                     # and to continue the boot process.
+
+# Services storage
+# ================
+
+zfs create          \
+    system/services
+
+mkdir -p /var/services
+
+# Quassel
+# ~~~~~~~
+
+zfs create                  \
+    -o acltype=posixacl     \
+    -o mountpoint=legacy    \
+    system/services/quassel
+
+mkdir -p /var/services/quassel
+mount -t zfs system/services/quassel /var/services/quassel

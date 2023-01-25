@@ -15,5 +15,7 @@
     ./users.nix
     ./daemons.nix
     ./packages.nix
+
+    ./services
   ];
 }
