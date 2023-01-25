@@ -1,0 +1,123 @@
+#!/bin/sh
+set -eu
+
+# Incomplete documentation-script to the system installation and initial
+# configuration.
+
+# System installation
+# ===================
+
+# Prepare system drives
+# ~~~~~~~~~~~~~~~~~~~~~
+
+SYSTEM_DISK_1=/dev/disk/by-id/ata-Lexar__SSD_NS100_512GB_MJ9527016149
+SYSTEM_DISK_2=/dev/disk/by-id/ata-Lexar__SSD_NS100_512GB_MJ9527016260
+
+sgdisk --zap-all $SYSTEM_DISK_1
+sgdisk --zap-all $SYSTEM_DISK_2
+
+parted --script $SYSTEM_DISK_1 \
+       mklabel gpt             \
+       mkpart grub-1    1 2M   \
+       mkpart boot-1   2M 4G   \
+       mkpart system-1 4G 100% \
+       set 1 bios_grub on
+
+parted --script $SYSTEM_DISK_2 \
+       mklabel gpt             \
+       mkpart grub-2    1 2M   \
+       mkpart boot-2   2M 4G   \
+       mkpart system-2 4G 100% \
+       set 1 bios_grub on
+
+BOOT_PART_1=/dev/disk/by-partlabel/boot-1
+BOOT_PART_2=/dev/disk/by-partlabel/boot-2
+
+SYSTEM_PART_1=/dev/disk/by-partlabel/system-1
+SYSTEM_PART_2=/dev/disk/by-partlabel/system-2
+
+mkfs.ext4 -L boot-1 $BOOT_PART_1
+mkfs.ext4 -L boot-2 $BOOT_PART_2
+
+# 80% of 472G which is the available space
+SYSTEM_POOL_QUOTA="380G"
+
+zpool create                                        \
+      -m none                                       \
+      -o ashift=12                                  \
+      -o altroot=/mnt                               \
+      -O quota=$SYSTEM_POOL_QUOTA                   \
+      -O canmount=off                               \
+      -O checksum=fletcher4                         \
+      -O compression=zstd                           \
+      -O xattr=sa                                   \
+      -O normalization=formD                        \
+      -O atime=off                                  \
+      -O encryption=aes-256-gcm                     \
+      -O keyformat=passphrase -O keylocation=prompt \
+      system                                        \
+      mirror                                        \
+      $SYSTEM_PART_1 $SYSTEM_PART_2
+
+zfs create               \
+    -o mountpoint=legacy \
+    system/nix
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    system/root
+
+zfs snapshot             \
+    system/root@empty
+
+zfs create               \
+    -o acltype=posixacl
+    -o mountpoint=legacy
+    system/state
+
+zfs create               \
+    fast-storage/home
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    fast-storage/home/tancredi
+
+# Mount partitions
+# ~~~~~~~~~~~~~~~~
+
+mkdir -p /mnt
+mount -t zfs system/root /mnt 
+
+mkdir -p /mnt/boot/1
+mkdir -p /mnt/boot/2
+mount -t ext4 $BOOT_PART_1 /mnt/boot/1
+mount -t ext4 $BOOT_PART_2 /mnt/boot/2
+
+mkdir -p /mnt/nix
+mount -t zfs system/nix /mnt/nix
+
+mkidr -p /mnt/state
+mount -t zfs system/state /mnt/state
+
+mkdir -p /mnt/home/tancredi
+mount -t zfs system/home/tancredi /mnt/home/tancredi
+
+# Install NixOS
+# ~~~~~~~~~~~~~
+
+# The following part is wrong and it is here just for reference.
+# TODO: replace it with the commands to perform a system installation from
+# the configuration contained in this repository.
+nixos-generate-config --root /mnt
+nixos-install
+
+# How to boot
+# ===========
+#
+# SSH into the initrd, then run
+#    zpool import -a  # If there are multiple pools.
+#    zfs load-key -a
+#    pkill zfs        # To kill the process asking for a password at the tty
+#                     # and to continue the boot process.
