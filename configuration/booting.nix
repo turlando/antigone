@@ -3,16 +3,12 @@
 let
 
   grubMirroredBoots =
-    map ({fst, snd}:
-      let
-        drive = snd;
-        i     = toString (fst + 1);
-      in
-        {
-          devices = [ (toString drive) ];
-          path    = "/boot/${i}";
-        })
-      (util.enumerate config.system.systemDrives);
+    lib.lists.imap1
+      (index: drive: {
+        devices = [ (toString drive) ];
+        path    = "/boot/${toString index}";
+      })
+      config.system.systemDrives;
 
   sshHostKeys =
     map
