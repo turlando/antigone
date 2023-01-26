@@ -4,39 +4,35 @@ let
   notifyCmd = "${localPkgs.telegram-send}/bin/telegram-send";
   notifyConf = toString (config.system.statePath + /etc/telegram-send.ini);
 
-  smartdNotify = pkgs.writeShellScript "smartd-notify.sh" ''
-    set -e
-    HOSTNAME=${config.networking.hostName}
-    FROM="SMART"
-    SUBJECT="SMART error ($SMARTD_FAILTYPE) detected on $HOSTNAME"
-    MESSAGE=$(
-      echo "The following warning/error was logged by the smartd daemon:"
-      echo "$SMARTD_MESSAGE"
-      echo
-      echo "Device info:"
-      echo "$SMARTD_DEVICEINFO"
-    )
-    echo $MESSAGE | ${notifyCmd} -c ${notifyConf} -r "$FROM" -s "$SUBJECT"
-  '';
+  notify = from: subject: message:
+    pkgs.writeShellScript "notify.sh" ''
+      set -e
+      echo "${message}" | ${notifyCmd} -c ${notifyConf} -r "${from}" -s "${subject}"
+    '';
 
-  upsOnBattery = pkgs.writeShellScript "ups-onbattery.sh" ''
-    set -e
-    HOSTNAME=${config.networking.hostName}
-    FROM="UPS"
-    SUBJECT="Power interruption at $HOSTNAME"
-    MESSAGE="A power interruption has been detected. Running on batteries."
-    echo $MESSAGE | ${notifyCmd} -c ${notifyConf} -r "$FROM" -s "$SUBJECT"
-  '';
+  smartdNotify = notify
+    "SMART"
+    "SMART error ($SMARTD_FAILTYPE) detected"
+    ''
+      The following warning/error was logged by the smartd daemon:
+      $SMARTD_MESSAGE
 
-  upsOffBattery = pkgs.writeShellScript "ups-offbattery.sh" ''
-    set -e
-    HOSTNAME=${config.networking.hostName}
-    FROM="UPS"
-    SUBJECT="Power restored at $HOSTNAME"
-    MESSAGE="The power interruption is over. Running on mains."
-    echo $MESSAGE | ${notifyCmd} -c ${notifyConf} -r "$FROM" -s "$SUBJECT"
-  '';
+      Device info:
+      $SMARTD_DEVICEINFO
+    '';
+
+  upsOnBatteryNotify = notify
+    "UPS"
+    "Detected power interruption"
+    "A power interruption has been detected. Running on batteries.";
+
+  upsOffBatteryNotify = notify
+    "UPS"
+    "Power restored"
+    "The power interruption is over. Running on mains.";
+
 in
+
 {
   services.zfs.zed.settings = {
     ZED_EMAIL_ADDR = [ "root" ];
@@ -53,8 +49,8 @@ in
   services.apcupsd = {
     enable = true;
     hooks = {
-      onbattery = upsOnBattery.outPath;
-      offbattery = upsOffBattery.outPath;
+      onbattery = upsOnBatteryNotify.outPath;
+      offbattery = upsOffBatteryNotify.outPath;
     };
   };
 }
