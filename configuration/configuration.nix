@@ -6,5 +6,5 @@
     /dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016260
   ];
 
-  system.statePath = /state;
+  system.statePath = /var/state;
 }
