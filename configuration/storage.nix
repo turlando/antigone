@@ -1,4 +1,4 @@
-{ config, util, ... }:
+{ config, lib, util, ... }:
 
 let
 
@@ -18,7 +18,12 @@ let
     };
   };
 
-  bootFileSystems = util.mergeAttrsets (map bootFileSystem [ 1 2 ]);
+  bootFileSystems =
+    let
+        count = builtins.length config.system.systemDrives;
+        range = lib.range 1 count;
+    in
+      util.mergeAttrsets (map bootFileSystem range);
 
   systemFileSystems = util.mergeAttrsets [
     (zfsFileSystem "system" "root" "/")
