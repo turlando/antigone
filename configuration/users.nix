@@ -1,5 +1,8 @@
-{ config, pkgs, util, ... }:
+{ config, pkgs, localLib, ... }:
 
+let
+  inherit (localLib.files) getSshKey readPassword;
+in
 {
   security.sudo = {
     enable = true;
@@ -13,20 +16,20 @@
 
     users = {
       root = {
-        hashedPassword = util.readPassword "tancredi";
-        openssh.authorizedKeys.keyFiles = [ (util.getSshKey "tancredi") ];
+        hashedPassword = readPassword "tancredi";
+        openssh.authorizedKeys.keyFiles = [ (getSshKey "tancredi") ];
       };
 
       tancredi = {
         isNormalUser = true;
-        hashedPassword = util.readPassword "tancredi";
+        hashedPassword = readPassword "tancredi";
         shell = pkgs.zsh;
 
         extraGroups = [
           "wheel"
         ];
 
-        openssh.authorizedKeys.keyFiles = [ (util.getSshKey "tancredi") ];
+        openssh.authorizedKeys.keyFiles = [ (getSshKey "tancredi") ];
       };
     };
   };

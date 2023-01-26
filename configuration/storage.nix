@@ -1,41 +1,30 @@
-{ config, lib, util, ... }:
+{ config, lib, localLib, ... }:
 
 let
+  inherit (builtins) length;
+  inherit (lib) range;
+  inherit (localLib.attrsets) mergeAttrsets;
+  inherit (localLib.filesystems) bootFileSystem zfsFileSystem;
 
-  # type: int -> AttrSet
-  bootFileSystem = index: {
-    "/boot/${toString index}" = {
-      device = "/dev/disk/by-partlabel/boot-${toString index}";
-      fsType = "ext4";
-    };
-  };
-
-  # type: str -> str -> str -> AttrSet
-  zfsFileSystem = pool: dataset: mountPoint: {
-    "${mountPoint}" = {
-      device = "${pool}/${dataset}";
-      fsType = "zfs";
-    };
-  };
+  systemDrives = config.system.systemDrives;
+  statePath = toString config.system.statePath;
 
   bootFileSystems =
     let
-        count = builtins.length config.system.systemDrives;
-        range = lib.range 1 count;
+        drivesCount = length systemDrives;
+        drivesRange = range 1 drivesCount;
     in
-      util.mergeAttrsets (map bootFileSystem range);
+      mergeAttrsets (map bootFileSystem drivesRange);
 
-  systemFileSystems = util.mergeAttrsets [
+  systemFileSystems = mergeAttrsets [
     (zfsFileSystem "system" "root" "/")
     (zfsFileSystem "system" "nix" "/nix")
-    (zfsFileSystem "system" "state" (toString config.system.statePath))
+    (zfsFileSystem "system" "state" statePath)
     (zfsFileSystem "system" "home/tancredi" "/home/tancredi")
   ];
-
 in
-
 {
-  fileSystems = util.mergeAttrsets [ bootFileSystems systemFileSystems ];
+  fileSystems = mergeAttrsets [ bootFileSystems systemFileSystems ];
 
   services.zfs.autoScrub = {
     enable = true;

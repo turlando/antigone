@@ -15,10 +15,4 @@ rec {
 
   # type: string -> string
   readPassword = x: readFile (/hashed-passwords + "/${x}.txt");
-
-  # type: [AttrSet] -> AttrSet
-  mergeAttrsets = xs: lib.lists.foldl
-    lib.attrsets.recursiveUpdate
-    (builtins.head xs)
-    (builtins.tail xs);
 }

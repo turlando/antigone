@@ -1,25 +1,24 @@
-{ config, lib, util, ... }:
+{ config, lib, localLib, ... }:
 
 let
+  inherit (lib.lists) imap1;
+  inherit (localLib.files) readSshKey;
+
+  statePath = toString config.system.statePath;
 
   grubMirroredBoots =
-    lib.lists.imap1
+    imap1
       (index: drive: {
         devices = [ (toString drive) ];
         path    = "/boot/${toString index}";
       })
       config.system.systemDrives;
 
-  sshHostKeys =
-    map
-      toString
-      [
-        (config.system.statePath + "/etc/ssh-initrd/ssh_host_rsa_key")
-        (config.system.statePath + "/etc/ssh-initrd/ssh_host_ed25519_key")
-      ];
-
+  sshHostKeys = [
+    (statePath + "/etc/ssh-initrd/ssh_host_rsa_key")
+    (statePath + "/etc/ssh-initrd/ssh_host_ed25519_key")
+  ];
 in
-
 {
   boot.loader.grub = {
     enable = true;
@@ -37,7 +36,7 @@ in
       enable = true;
       port = 2222;
       hostKeys = sshHostKeys;
-      authorizedKeys = [ (util.readSshKey "boot") ];
+      authorizedKeys = [ (readSshKey "boot") ];
     };
   };
 
