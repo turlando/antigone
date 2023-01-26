@@ -10,7 +10,7 @@
     ./hardware-configuration.nix
 
     ./booting.nix
-    ./filesystems.nix
+    ./storage.nix
     ./network.nix
     ./users.nix
     ./daemons.nix
