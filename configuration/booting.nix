@@ -4,7 +4,9 @@ let
   inherit (lib.lists) imap1;
   inherit (localLib.files) readSshKey;
 
-  statePath = toString config.system.statePath;
+  storageCfg = config.local.storage;
+  statePath = toString storageCfg.statePath;
+  systemDrives = map toString storageCfg.systemDrives;
 
   grubMirroredBoots =
     imap1
@@ -12,7 +14,7 @@ let
         devices = [ (toString drive) ];
         path    = "/boot/${toString index}";
       })
-      config.system.systemDrives;
+      systemDrives;
 
   sshHostKeys = [
     (statePath + "/etc/ssh-initrd/ssh_host_rsa_key")
@@ -39,10 +41,4 @@ in
       authorizedKeys = [ (readSshKey "boot") ];
     };
   };
-
-  boot.tmpOnTmpfs = true;
-
-  boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs rollback -r system/root@empty
-  '';
 }

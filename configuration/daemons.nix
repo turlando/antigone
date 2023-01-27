@@ -1,6 +1,7 @@
 { config, lib, options, ... }:
 
 let
+  statePath = toString config.local.storage.statePath;
 
   sshHostKeys =
     map
@@ -8,13 +9,11 @@ let
         lib.updateManyAttrsByPath
           [ {
               path = [ "path" ];
-              update = p: toString (config.system.statePath + p);
+              update = p: "${statePath}/${p}";
           } ]
           attr)
       options.services.openssh.hostKeys.default;
-
 in
-
 {
   services.openssh = {
     enable = true;
