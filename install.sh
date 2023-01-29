@@ -98,8 +98,8 @@ mount -t ext4 $BOOT_PART_2 /mnt/boot/2
 mkdir -p /mnt/nix
 mount -t zfs system/nix /mnt/nix
 
-mkidr -p /mnt/state
-mount -t zfs system/state /mnt/state
+mkidr -p /mnt/var/state
+mount -t zfs system/state /mnt/var/state
 
 mkdir -p /mnt/home/tancredi
 mount -t zfs system/home/tancredi /mnt/home/tancredi
