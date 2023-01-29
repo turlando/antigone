@@ -51,7 +51,6 @@ in
       type = types.path;
       default = /var/state;
     };
-
   };
 
   config = {

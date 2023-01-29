@@ -7,7 +7,6 @@
     ./hardware-configuration.nix
 
     ./booting.nix
-    ./network.nix
     ./users.nix
     ./daemons.nix
     ./packages.nix
