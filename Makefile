@@ -1,7 +1,7 @@
 ###############################################################################
 
 NIXOS_CONFIG    := configuration.nix
-HARDWARE_CONFIG := configuration/hardware-configuration.nix
+HARDWARE_CONFIG := hardware-configuration.nix
 
 NIX_PATH_OPTS := -I nixos-config=$(NIXOS_CONFIG)
 

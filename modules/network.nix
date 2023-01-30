@@ -1,8 +1,8 @@
-{ config, lib, ... }:
+{ config, lib, options, ... }:
 
 let
   inherit (lib) mkOption types;
-  inherit (lib.attrsets) mapAttrs' nameValuePair;
+  inherit (lib.attrsets) mapAttrs' nameValuePair updateManyAttrsByPath;
 
   cfg = config.local.network;
 in
@@ -47,6 +47,23 @@ in
       interfaces = mapAttrs'
         (name: config: nameValuePair name { useDHCP = config.useDHCP; })
         cfg.interfaces;
+    };
+
+    services.openssh = let
+      statePath = toString config.local.storage.paths.state;
+      sshHostKeys = map
+        (attr: updateManyAttrsByPath
+          [ {
+            path = [ "path" ];
+            update = p: "${statePath}/${p}";
+          } ]
+          attr)
+        options.services.openssh.hostKeys.default;
+    in {
+      enable = true;
+      passwordAuthentication = false;
+      permitRootLogin = "prohibit-password";
+      hostKeys = sshHostKeys;
     };
   };
 }
