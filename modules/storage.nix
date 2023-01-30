@@ -43,6 +43,10 @@ in {
         type = types.str;
         default = "${cfg.pools.system}/state";
       };
+      home = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.system}/home";
+      };
       services = lib.mkOption {
         type = types.str;
         default = "${cfg.pools.system}/services";
@@ -84,7 +88,6 @@ in {
             (zfsFileSystem' cfg.datasets.root "/")
             (zfsFileSystem' cfg.datasets.nix "/nix")
             (zfsFileSystem' cfg.datasets.state statePath)
-            (zfsFileSystem cfg.pools.system "home/tancredi" "/home/tancredi")
           ];
     in {
       fileSystems = mergeAttrsets [ bootFileSystems systemFileSystems ];

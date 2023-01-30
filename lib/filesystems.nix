@@ -25,7 +25,13 @@ rec {
     };
   };
 
-  # type: str -> str
+  # type: str -> AttrSet
+  homeFileSystem =
+    name: zfsFileSystem'
+      "${config.local.storage.datasets.home}/${name}"
+      "/home/${name}";
+
+  # type: str -> AttrSet
   serviceFileSystem =
     name: zfsFileSystem'
       "${config.local.storage.datasets.services}/${name}"
