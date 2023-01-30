@@ -5,8 +5,8 @@ let
   inherit (localLib.files) readSshKey;
 
   storageCfg = config.local.storage;
-  statePath = toString storageCfg.statePath;
-  systemDrives = map toString storageCfg.systemDrives;
+  statePath = toString storageCfg.paths.state;
+  systemDrives = map toString storageCfg.drives.system;
 
   grubMirroredBoots =
     imap1

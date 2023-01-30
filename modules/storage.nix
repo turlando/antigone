@@ -4,74 +4,99 @@ let
   inherit (builtins) length;
   inherit (lib) mkAfter mkIf range types;
   inherit (localLib.attrsets) mergeAttrsets;
-  inherit (localLib.filesystems) bootFileSystem zfsFileSystem;
+  inherit (localLib.filesystems) bootFileSystem zfsFileSystem zfsFileSystem';
 
   cfg = config.local.storage;
-
-  systemDrives = map toString cfg.systemDrives;
-  systemPool = cfg.systemPool;
-  ephemeralRoot = cfg.ephemeralRoot;
-  statePath = toString cfg.statePath;
-
-  bootFileSystems =
-    let
-      drivesCount = length systemDrives;
-      drivesRange = range 1 drivesCount;
-    in
-      mergeAttrsets (map bootFileSystem drivesRange);
-
-  systemFileSystems = mergeAttrsets [
-    (zfsFileSystem systemPool "root" "/")
-    (zfsFileSystem systemPool "nix" "/nix")
-    (zfsFileSystem systemPool "state" statePath)
-    (zfsFileSystem systemPool "home/tancredi" "/home/tancredi")
-  ];
-in
-{
+in {
   options.local.storage = {
-    systemDrives = lib.mkOption {
-      type = types.nonEmptyListOf types.path;
-      default = [
-        /dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016149
-        /dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016260
-      ];
+    drives = {
+      system = lib.mkOption {
+        type = types.nonEmptyListOf types.path;
+        default = [
+          /dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016149
+          /dev/disk/by-id/ata-Lexar_SSD_NS100_512GB_MJ95272016260
+        ];
+      };
     };
 
-    systemPool = lib.mkOption {
-      type = types.str;
-      default = "system";
+    pools = {
+      system = lib.mkOption {
+        type = types.str;
+        default = "system";
+      };
+    };
+
+    datasets = {
+      root = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.system}/root";
+      };
+      emptyRoot = lib.mkOption {
+        type = types.str;
+        default = "${cfg.datasets.root}@empty";
+      };
+      nix = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.system}/nix";
+      };
+      state = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.system}/state";
+      };
+    };
+
+    paths = {
+      state = lib.mkOption {
+        type = types.path;
+        default = /var/state;
+      };
     };
 
     ephemeralRoot = lib.mkOption {
       type = types.bool;
       default = true;
     };
-
-    statePath = lib.mkOption {
-      type = types.path;
-      default = /var/state;
-    };
   };
 
-  config = {
-    fileSystems = mergeAttrsets [ bootFileSystems systemFileSystems ];
+  config =
+    let
+      bootFileSystems =
+        let
+          systemDrives = map toString cfg.drives.system;
+          drivesCount = length systemDrives;
+          drivesRange = range 1 drivesCount;
+        in
+          mergeAttrsets (map bootFileSystem drivesRange);
 
-    boot.initrd.postDeviceCommands = mkIf ephemeralRoot (mkAfter ''
-      zfs rollback -r ${systemPool}/root@empty
-    '');
+      systemFileSystems =
+        let
+          statePath = toString cfg.paths.state;
+        in
+          mergeAttrsets [
+            (zfsFileSystem' cfg.datasets.root "/")
+            (zfsFileSystem' cfg.datasets.nix "/nix")
+            (zfsFileSystem' cfg.datasets.state statePath)
+            (zfsFileSystem cfg.pools.system "home/tancredi" "/home/tancredi")
+          ];
+    in {
+      fileSystems = mergeAttrsets [ bootFileSystems systemFileSystems ];
 
-    boot.tmpOnTmpfs = true;
+      boot.initrd.postDeviceCommands = mkIf cfg.ephemeralRoot (mkAfter ''
+        zfs rollback -r ${cfg.datasets.emptyRoot}
+      '');
 
-    services.zfs.autoScrub = {
-      enable = true;
-      # Run on the first Monday of every month at 02:00.
-      interval = "Mon *-*-1..7 02:00:00";
+      boot.tmpOnTmpfs = true;
+
+      services.zfs.autoScrub = {
+        enable = true;
+        # Run on the first Monday of every month at 02:00.
+        interval = "Mon *-*-1..7 02:00:00";
+      };
+
+      services.zfs.trim = {
+        enable = true;
+        # Run on every Friday at 02:00.
+        interval = "Fri *-*-* 02:00:00";
+      };
     };
-
-    services.zfs.trim = {
-      enable = true;
-      # Run on every Friday at 02:00.
-      interval = "Fri *-*-* 02:00:00";
-    };
-  };
 }

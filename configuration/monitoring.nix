@@ -1,7 +1,7 @@
 { pkgs, localPkgs, config, ... }:
 
 let
-  statePath = toString config.local.storage.statePath;
+  statePath = toString config.local.storage.paths.state;
   notifyCmd = "${localPkgs.telegram-send}/bin/telegram-send";
   notifyConf = "${statePath}/etc/telegram-send.ini";
 

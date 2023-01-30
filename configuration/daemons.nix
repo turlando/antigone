@@ -1,7 +1,7 @@
 { config, lib, options, ... }:
 
 let
-  statePath = toString config.local.storage.statePath;
+  statePath = toString config.local.storage.paths.state;
 
   sshHostKeys =
     map

@@ -10,9 +10,16 @@
   };
 
   # type: str -> str -> str -> AttrSet
-  zfsFileSystem = pool: dataset: mountPoint: {
+  zfsFileSystem = pool: filesystem: mountPoint: {
     "${mountPoint}" = {
-      device = "${pool}/${dataset}";
+      device = "${pool}/${filesystem}";
+      fsType = "zfs";
+    };
+  };
+
+  zfsFileSystem' = dataset: mountPoint: {
+    "${mountPoint}" = {
+      device = dataset;
       fsType = "zfs";
     };
   };
