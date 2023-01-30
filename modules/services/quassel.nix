@@ -1,21 +1,28 @@
-{ ... }:
+{ config, localLib, ... }:
 
+let
+  inherit (localLib.attrsets) mergeAttrsets;
+  inherit (localLib.filesystems) serviceFileSystem servicePath;
+
+  name = "quassel";
+  dataPath = "/data";
+in
 {
-  fileSystems."/var/services/quassel" = {
-    device = "system/services/quassel";
-    fsType = "zfs";
-  };
+  fileSystems = mergeAttrsets [
+    (serviceFileSystem name)
+  ];
 
-  containers.quassel = {
+  containers."${name}" = {
     ephemeral = true;
     autoStart = true;
+
     bindMounts = {
       "/etc/resolv.conf" = {
         hostPath = "/etc/resolv.conf";
         isReadOnly = true;
       };
-      "/data" = {
-        hostPath = "/var/services/quassel";
+      "${dataPath}" = {
+        hostPath = toString (servicePath name);
         isReadOnly = false;
       };
     };
@@ -38,9 +45,10 @@
           # sudo -u quassel quasselcore --configdir=/data --add-user
           pkgs.quasselDaemon
         ];
+
         services.quassel = {
           enable = true;
-          dataDir = "/data";
+          dataDir = dataPath;
         };
       };
   };

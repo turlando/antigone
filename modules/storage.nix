@@ -43,12 +43,20 @@ in {
         type = types.str;
         default = "${cfg.pools.system}/state";
       };
+      services = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.system}/services";
+      };
     };
 
     paths = {
       state = lib.mkOption {
         type = types.path;
         default = /var/state;
+      };
+      services = lib.mkOption {
+        type = types.path;
+        default = /var/services;
       };
     };
 
