@@ -39,7 +39,7 @@ SYSTEM_PART_2=/dev/disk/by-partlabel/system-2
 mkfs.ext4 -L boot-1 $BOOT_PART_1
 mkfs.ext4 -L boot-2 $BOOT_PART_2
 
-# 80% of 472G which is the available space
+# 80% of 472GiB which is the available space
 SYSTEM_POOL_QUOTA="380G"
 
 zpool create                                        \
@@ -140,3 +140,36 @@ zfs create                  \
 
 mkdir -p /var/services/quassel
 mount -t zfs system/services/quassel /var/services/quassel
+
+# Storage
+# =======
+
+STORAGE_DISK_1=/dev/disk/by-id/ata-HGST_HUS724040ALA640_PN1334PBJMA8AS
+STORAGE_DISK_2=/dev/disk/by-id/ata-HGST_HUS724040ALA640_PN1334PBJN6DGS
+STORAGE_DISK_3=/dev/disk/by-id/ata-HGST_HUS724040ALA640_PN1334PBJX3R3S
+STORAGE_DISK_4=/dev/disk/by-id/ata-HGST_HUS724040ALA640_PN2334PBJTM5GT
+
+# 80% of 7.2TiB
+STORAGE_POOL_QUOTA="5800G"
+
+sgdisk --zap-all $STORAGE_DISK_1
+sgdisk --zap-all $STORAGE_DISK_2
+sgdisk --zap-all $STORAGE_DISK_3
+sgdisk --zap-all $STORAGE_DISK_4
+
+zpool create                                                  \
+      -m none                                                 \
+      -o ashift=12                                            \
+      -o altroot=/mnt                                         \
+      -O quota=$STORAGE_POOL_QUOTA                            \
+      -O canmount=off                                         \
+      -O checksum=fletcher4                                   \
+      -O compression=zstd                                     \
+      -O xattr=sa                                             \
+      -O normalization=formD                                  \
+      -O atime=off                                            \
+      -O encryption=aes-256-gcm                               \
+      -O keyformat=passphrase -O keylocation=prompt           \
+      storage                                                 \
+      mirror $STORAGE_DISK_1 $STORAGE_DISK_2                  \
+      mirror $STORAGE_DISK_3 $STORAGE_DISK_4
