@@ -109,5 +109,9 @@ in {
         # Run on every Friday at 02:00.
         interval = "Fri *-*-* 02:00:00";
       };
+
+      users.groups.storage = {
+        gid = 5000;
+      };
     };
 }
