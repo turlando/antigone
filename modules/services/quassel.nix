@@ -3,9 +3,9 @@
 let
   inherit (localLib.attrsets) mergeAttrsets;
   inherit (localLib.filesystems) serviceFileSystem servicePath;
+  inherit (localLib.services) dataPath resolvBindMount dataBindMount;
 
   name = "quassel";
-  dataPath = "/data";
 in
 {
   fileSystems = mergeAttrsets [
@@ -16,16 +16,10 @@ in
     ephemeral = true;
     autoStart = true;
 
-    bindMounts = {
-      "/etc/resolv.conf" = {
-        hostPath = "/etc/resolv.conf";
-        isReadOnly = true;
-      };
-      "${dataPath}" = {
-        hostPath = toString (servicePath name);
-        isReadOnly = false;
-      };
-    };
+    bindMounts = mergeAttrsets [
+      resolvBindMount
+      (dataBindMount name)
+    ];
 
     config =
       { config, pkgs, ... }:
@@ -48,7 +42,7 @@ in
 
         services.quassel = {
           enable = true;
-          dataDir = dataPath;
+          dataDir = toString dataPath;
         };
       };
   };

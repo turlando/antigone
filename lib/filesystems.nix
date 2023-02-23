@@ -1,6 +1,14 @@
 { config, ... }:
 
-rec {
+let
+  # type: str -> AttrSet
+  zfsFileSystem' = dataset: mountPoint: {
+    "${mountPoint}" = {
+      device = dataset;
+      fsType = "zfs";
+    };
+  };
+in {
   # type: int -> AttrSet
   bootFileSystem = index: {
     "/boot/${toString index}" = {
@@ -18,13 +26,7 @@ rec {
     };
   };
 
-  # type: str -> AttrSet
-  zfsFileSystem' = dataset: mountPoint: {
-    "${mountPoint}" = {
-      device = dataset;
-      fsType = "zfs";
-    };
-  };
+  zfsFileSystem' = zfsFileSystem';
 
   # type: str -> AttrSet
   homeFileSystem =
