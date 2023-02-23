@@ -141,6 +141,17 @@ zfs create                  \
 mkdir -p /var/services/quassel
 mount -t zfs system/services/quassel /var/services/quassel
 
+# Syncthing
+# ~~~~~~~~~
+
+zfs create                  \
+    -o acltype=posixacl     \
+    -o mountpoint=legacy    \
+    system/services/syncthing
+
+mkdir -p /var/services/syncthing
+mount -t zfs system/services/syncthing /var/services/syncthing
+
 # Storage
 # =======
 
