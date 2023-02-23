@@ -6,6 +6,7 @@ let
   inherit (localLib.services) dataPath resolvBindMount dataBindMount hostBindMount;
 
   storageConfig = config.local.storage;
+  storageGroup = config.users.groups.storage;
 
   name = "syncthing";
 in
@@ -27,6 +28,14 @@ in
       { config, pkgs, ... }:
       {
         system.stateVersion = "22.11";
+
+        users.groups = {
+          storage = storageGroup;
+        };
+
+        users.users.syncthing = {
+          extraGroups = [ storageGroup.name ];
+        };
 
         services.syncthing = {
           enable = true;
