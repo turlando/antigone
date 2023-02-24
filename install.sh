@@ -144,9 +144,9 @@ mount -t zfs system/services/quassel /var/services/quassel
 # Syncthing
 # ~~~~~~~~~
 
-zfs create                  \
-    -o acltype=posixacl     \
-    -o mountpoint=legacy    \
+zfs create                    \
+    -o acltype=posixacl       \
+    -o mountpoint=legacy      \
     system/services/syncthing
 
 mkdir -p /var/services/syncthing
@@ -168,19 +168,33 @@ sgdisk --zap-all $STORAGE_DISK_2
 sgdisk --zap-all $STORAGE_DISK_3
 sgdisk --zap-all $STORAGE_DISK_4
 
-zpool create                                                  \
-      -m none                                                 \
-      -o ashift=12                                            \
-      -o altroot=/mnt                                         \
-      -O quota=$STORAGE_POOL_QUOTA                            \
-      -O canmount=off                                         \
-      -O checksum=fletcher4                                   \
-      -O compression=zstd                                     \
-      -O xattr=sa                                             \
-      -O normalization=formD                                  \
-      -O atime=off                                            \
-      -O encryption=aes-256-gcm                               \
-      -O keyformat=passphrase -O keylocation=prompt           \
-      storage                                                 \
-      mirror $STORAGE_DISK_1 $STORAGE_DISK_2                  \
+zpool create                                        \
+      -m none                                       \
+      -o ashift=12                                  \
+      -o altroot=/mnt                               \
+      -O quota=$STORAGE_POOL_QUOTA                  \
+      -O canmount=off                               \
+      -O checksum=fletcher4                         \
+      -O compression=zstd                           \
+      -O xattr=sa                                   \
+      -O normalization=formD                        \
+      -O atime=off                                  \
+      -O encryption=aes-256-gcm                     \
+      -O keyformat=passphrase -O keylocation=prompt \
+      storage                                       \
+      mirror $STORAGE_DISK_1 $STORAGE_DISK_2        \
       mirror $STORAGE_DISK_3 $STORAGE_DISK_4
+
+# Books
+# ~~~~~
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    storage/books
+
+mkdir -p /mnt/storage/books
+mount -t zfs storage/books /mnt/storage/books
+chown root:storage /mnt/storage/books
+chmod g+s /mnt/storage/books
+setfacl -m g:storage:rwX /mnt/storage/books

@@ -24,9 +24,14 @@ in {
         type = types.str;
         default = "system";
       };
+      storage = lib.mkOption {
+        type = types.str;
+        default = "storage";
+      };
     };
 
     datasets = {
+      # System datasets
       root = lib.mkOption {
         type = types.str;
         default = "${cfg.pools.system}/root";
@@ -51,9 +56,16 @@ in {
         type = types.str;
         default = "${cfg.pools.system}/services";
       };
+
+      # Storage datasets
+      books = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.storage}/books";
+      };
     };
 
     paths = {
+      # System mount points
       state = lib.mkOption {
         type = types.path;
         default = /var/state;
@@ -61,6 +73,12 @@ in {
       services = lib.mkOption {
         type = types.path;
         default = /var/services;
+      };
+
+      # Storage mount points
+      books = lib.mkOption {
+        type = types.path;
+        default = /mnt/storage/books;
       };
     };
 
@@ -89,8 +107,20 @@ in {
             (zfsFileSystem' cfg.datasets.nix "/nix")
             (zfsFileSystem' cfg.datasets.state statePath)
           ];
+
+      storageFileSystems =
+        let
+          booksPath = toString cfg.paths.books;
+        in
+          mergeAttrsets [
+            (zfsFileSystem' cfg.datasets.books booksPath)
+          ];
     in {
-      fileSystems = mergeAttrsets [ bootFileSystems systemFileSystems ];
+      fileSystems = mergeAttrsets [
+        bootFileSystems
+        systemFileSystems
+        storageFileSystems
+      ];
 
       boot.initrd.postDeviceCommands = mkIf cfg.ephemeralRoot (mkAfter ''
         zfs rollback -r ${cfg.datasets.emptyRoot}
