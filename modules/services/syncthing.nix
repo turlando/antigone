@@ -12,6 +12,7 @@ let
 
   antigoneId = "6YAFIOP-Y6TGT4V-FPT77ER-YZMJODJ-533JSKV-FJ5IFOW-QNVMVAV-32XR6AR";
   bahnhofId = "USBCMJL-WXMG4PP-XC364HB-OKBWEVH-HGKVW6E-T2YML7O-56BMQMH-3P7BUAP";
+  tabletId = "RLGYY64-A45GLZF-I6SHORQ-4YQCNO6-U4NNPIS-BBUPTTG-QPCTXVW-RFQJYAO";
 in
 {
   fileSystems = mergeAttrsets [
@@ -49,6 +50,7 @@ in
           devices = {
             Antigone.id = antigoneId;
             Bahnhof.id = bahnhofId;
+            Tablet.id = tabletId;
           };
 
           folders = {
@@ -58,6 +60,7 @@ in
               type = "sendonly";
               devices = [
                 config.services.syncthing.devices.Bahnhof.name
+                config.services.syncthing.devices.Tablet.name
               ];
             };
           };
