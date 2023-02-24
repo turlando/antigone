@@ -5,10 +5,10 @@ let
   inherit (localLib.filesystems) serviceFileSystem servicePath;
   inherit (localLib.services) dataPath resolvBindMount dataBindMount hostBindMount;
 
+  name = "syncthing";
+
   storageConfig = config.local.storage;
   storageGroup = config.users.groups.storage;
-
-  name = "syncthing";
 in
 {
   fileSystems = mergeAttrsets [
@@ -22,6 +22,7 @@ in
     bindMounts = mergeAttrsets [
       resolvBindMount
       (dataBindMount name)
+      (hostBindMount storageConfig.paths.books)
     ];
 
     config =
