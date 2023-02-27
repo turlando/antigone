@@ -62,6 +62,10 @@ in {
         type = types.str;
         default = "${cfg.pools.storage}/books";
       };
+      musicElectronic = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.storage}/music/electronic";
+      };
     };
 
     paths = {
@@ -79,6 +83,10 @@ in {
       books = lib.mkOption {
         type = types.path;
         default = /mnt/storage/books;
+      };
+      musicElectronic = lib.mkOption {
+        type = types.path;
+        default = /mnt/storage/music/electronic;
       };
     };
 
@@ -111,9 +119,11 @@ in {
       storageFileSystems =
         let
           booksPath = toString cfg.paths.books;
+          musicElectronicPath = toString cfg.paths.musicElectronic;
         in
           mergeAttrsets [
             (zfsFileSystem' cfg.datasets.books booksPath)
+            (zfsFileSystem' cfg.datasets.musicElectronic musicElectronicPath)
           ];
     in {
       fileSystems = mergeAttrsets [

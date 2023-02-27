@@ -198,3 +198,22 @@ mount -t zfs storage/books /mnt/storage/books
 chown root:storage /mnt/storage/books
 chmod g+s /mnt/storage/books
 setfacl -m g:storage:rwX /mnt/storage/books
+
+# Music
+# ~~~~~
+
+zfs create storage/music
+
+# Electronic
+# ----------
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    storage/music/electronic
+
+mkdir -p /mnt/storage/music/electronic
+mount -t zfs storage/music/electronic /mnt/storage/music/electronic
+chown root:storage /mnt/storage/music/electronic
+chmod g+s /mnt/storage/music/electronic
+setfacl -m g:storage:rwX /mnt/storage/music/electronic
