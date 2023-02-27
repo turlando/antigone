@@ -64,6 +64,7 @@ in
       passwordAuthentication = false;
       permitRootLogin = "prohibit-password";
       hostKeys = sshHostKeys;
+      forwardX11 = true;
     };
   };
 }
