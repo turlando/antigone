@@ -28,6 +28,7 @@ in
       resolvBindMount
       (dataBindMount name)
       (hostBindMount storageConfig.paths.books)
+      (hostBindMount storageConfig.paths.musicElectronic)
     ];
 
     config =
@@ -63,6 +64,14 @@ in
               devices = [
                 config.services.syncthing.devices.Bahnhof.name
                 config.services.syncthing.devices.Tablet.name
+              ];
+            };
+            music-electronic = {
+              label = "Music - Electronic";
+              path = toString storageConfig.paths.musicElectronic;
+              type = "sendonly";
+              devices = [
+                config.services.syncthing.devices.Tersicore.name
               ];
             };
           };
