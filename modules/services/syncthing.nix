@@ -12,6 +12,7 @@ let
 
   antigoneId = "6YAFIOP-Y6TGT4V-FPT77ER-YZMJODJ-533JSKV-FJ5IFOW-QNVMVAV-32XR6AR";
   bahnhofId = "USBCMJL-WXMG4PP-XC364HB-OKBWEVH-HGKVW6E-T2YML7O-56BMQMH-3P7BUAP";
+  tersicoreId = "FM5JR2N-PM7ZAHY-MDCOE35-O2JPFVC-WAQVIE7-BGSCIE5-RTL25WO-TG2Z6AY";
   tabletId = "RLGYY64-A45GLZF-I6SHORQ-4YQCNO6-U4NNPIS-BBUPTTG-QPCTXVW-RFQJYAO";
 in
 {
@@ -50,6 +51,7 @@ in
           devices = {
             Antigone.id = antigoneId;
             Bahnhof.id = bahnhofId;
+            Tersicore.id = tersicoreId;
             Tablet.id = tabletId;
           };
 
