@@ -28,6 +28,10 @@ in {
         type = types.str;
         default = "storage";
       };
+      backup = lib.mkOption {
+        type = types.str;
+        default = "backup";
+      };
     };
 
     datasets = {
@@ -55,6 +59,14 @@ in {
       services = lib.mkOption {
         type = types.str;
         default = "${cfg.pools.system}/services";
+      };
+      serviceQuassel = lib.mkOption {
+        type = types.str;
+        default = "${cfg.datasets.services}/quassel";
+      };
+      serviceSyncthing = lib.mkOption {
+        type = types.str;
+        default = "${cfg.datasets.services}/syncting";
       };
 
       # Storage datasets
@@ -148,6 +160,70 @@ in {
         enable = true;
         # Run on every Friday at 02:00.
         interval = "Fri *-*-* 02:00:00";
+      };
+
+      services.sanoid = {
+        enable = true;
+        extraArgs = [ "--verbose" ];
+        datasets =
+          let
+            dailyCfg = {
+              yearly = 0;
+              monthly = 0;
+              daily = 30;
+              hourly = 0;
+              frequently = 0;
+              autosnap = true;
+              autoprune = true;
+              recursive = false;
+            };
+            backupCfg = {
+              yearly = 0;
+              monthly = 12;
+              daily = 30;
+              hourly = 48;
+              autosnap = false;
+              autoprune = true;
+              recursive = true;
+            };
+          in {
+            # The system state changes so slowly I manually snapshot it.
+            # "${cfg.datasets.state}" = dailyCfg;
+            "${cfg.datasets.serviceQuassel}" = dailyCfg;
+            "${cfg.datasets.books}" = dailyCfg;
+            "${cfg.datasets.musicElectronic}" = dailyCfg;
+            "${cfg.pools.backup}" = backupCfg;
+          };
+      };
+
+      services.syncoid = {
+        enable = true;
+        commands = let
+          common = {
+            extraArgs = [ "--no-sync-snap" "--no-resume" ];
+            sendOptions = "Rw";
+            recursive = false;
+            localTargetAllow = [
+              "change-key" "compression" "create" "mount" "mountpoint"
+              "receive" "rollback" "acltype"
+            ];
+          };
+
+          # type: str -> str -> str
+          # Example:
+          #  addPrefix "system/services/quassel"
+          #  => "backup/system/services/quassel"
+          addBackupPrefix = dataset: cfg.pools.backup + "/" + dataset;
+        in {
+          "${cfg.datasets.state}" =
+            { target = addBackupPrefix cfg.datasets.state; } // common;
+          "${cfg.datasets.serviceQuassel}" =
+            { target = addBackupPrefix cfg.datasets.serviceQuassel; } // common;
+          "${cfg.datasets.books}" =
+            { target = addBackupPrefix cfg.datasets.books; } // common;
+          "${cfg.datasets.musicElectronic}" =
+            { target = addBackupPrefix cfg.datasets.musicElectronic; } // common;
+        };
       };
 
       users.groups.storage = {

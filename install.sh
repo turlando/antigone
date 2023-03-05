@@ -217,3 +217,31 @@ mount -t zfs storage/music/electronic /mnt/storage/music/electronic
 chown root:storage /mnt/storage/music/electronic
 chmod g+s /mnt/storage/music/electronic
 setfacl -m g:storage:rwX /mnt/storage/music/electronic
+
+# Backup
+# ======
+
+# 80% of 10.9T
+BACKUP_POOL_QUOTA="8700G"
+BACKUP_DISK=/dev/disk/by-id/usb-WD_Elements_25A3_394C473334593841-0:0
+
+zpool create                                        \
+      -m none                                       \
+      -o ashift=12                                  \
+      -o altroot=/mnt                               \
+      -O quota=$BACKUP_POOL_QUOTA                   \
+      -O canmount=off                               \
+      -O checksum=fletcher4                         \
+      -O compression=zstd                           \
+      -O xattr=sa                                   \
+      -O normalization=formD                        \
+      -O atime=off                                  \
+      -O encryption=aes-256-gcm                     \
+      -O keyformat=passphrase -O keylocation=prompt \
+      backup                                        \
+      $BACKUP_DISK
+
+zfs create backup/system
+zfs create backup/system/services
+zfs create backup/storage
+zfs create backup/storage/music
