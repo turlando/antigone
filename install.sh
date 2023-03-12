@@ -288,3 +288,22 @@ mount -t zfs scratch/music-opus/electronic /mnt/scratch/music-opus/electronic
 chown root:storage /mnt/scratch/music-opus/electronic
 chmod g+s /mnt/scratch/music-opus/electronic
 setfacl -m g:storage:rwX /mnt/scratch/music-opus/electronic
+
+# Music (MP3)
+# ~~~~~~~~~~~~
+
+zfs create scratch/music-mp3
+
+# Electronic
+# ----------
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    scratch/music-mp3/electronic
+
+mkdir -p /mnt/scratch/music-mp3/electronic
+mount -t zfs scratch/music-mp3/electronic /mnt/scratch/music-mp3/electronic
+chown root:storage /mnt/scratch/music-mp3/electronic
+chmod g+s /mnt/scratch/music-mp3/electronic
+setfacl -m g:storage:rwX /mnt/scratch/music-mp3/electronic

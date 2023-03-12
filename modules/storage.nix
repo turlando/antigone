@@ -88,6 +88,10 @@ in {
         type = types.str;
         default = "${cfg.pools.scratch}/music-opus/electronic";
       };
+      musicMp3Electronic = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.scratch}/music-mp3/electronic";
+      };
     };
 
     paths = {
@@ -115,6 +119,10 @@ in {
       musicOpusElectronic = lib.mkOption {
         type = types.path;
         default = /mnt/scratch/music-opus/electronic;
+      };
+      musicMp3Electronic = lib.mkOption {
+        type = types.path;
+        default = /mnt/scratch/music-mp3/electronic;
       };
     };
 
@@ -149,11 +157,13 @@ in {
           booksPath = toString cfg.paths.books;
           musicElectronicPath = toString cfg.paths.musicElectronic;
           musicOpusElectronicPath = toString cfg.paths.musicOpusElectronic;
+          musicMp3ElectronicPath = toString cfg.paths.musicMp3Electronic;
         in
           mergeAttrsets [
             (zfsFileSystem' cfg.datasets.books booksPath)
             (zfsFileSystem' cfg.datasets.musicElectronic musicElectronicPath)
             (zfsFileSystem' cfg.datasets.musicOpusElectronic musicOpusElectronicPath)
+            (zfsFileSystem' cfg.datasets.musicMp3Electronic musicMp3ElectronicPath)
           ];
     in {
       fileSystems = mergeAttrsets [
