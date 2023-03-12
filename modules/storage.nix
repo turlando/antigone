@@ -32,6 +32,10 @@ in {
         type = types.str;
         default = "backup";
       };
+      scratch = lib.mkOption {
+        type = types.str;
+        default = "scratch";
+      };
     };
 
     datasets = {

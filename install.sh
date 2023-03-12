@@ -245,3 +245,27 @@ zfs create backup/system
 zfs create backup/system/services
 zfs create backup/storage
 zfs create backup/storage/music
+
+# Scratch
+# =======
+
+# 80% of 931.5 * 2
+SCRATCH_POOL_QUOTA="1490G"
+SCRATCH_DISK_1=/dev/disk/by-id/ata-TOSHIBA_DT01ACA100_13DHDUDPS
+SCRATCH_DISK_2=/dev/disk/by-id/ata-TOSHIBA_DT01ACA100_Z36G75TPS
+
+zpool create                                        \
+      -m none                                       \
+      -o ashift=12                                  \
+      -o altroot=/mnt                               \
+      -O quota=$SCRATCH_POOL_QUOTA                  \
+      -O canmount=off                               \
+      -O checksum=fletcher4                         \
+      -O compression=zstd                           \
+      -O xattr=sa                                   \
+      -O normalization=formD                        \
+      -O atime=off                                  \
+      -O encryption=aes-256-gcm                     \
+      -O keyformat=passphrase -O keylocation=prompt \
+      scratch                                       \
+      $SCRATCH_DISK_1 $SCRATCH_DISK_2
