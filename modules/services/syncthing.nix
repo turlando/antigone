@@ -30,6 +30,7 @@ in
       (dataBindMount name)
       (hostBindMount storageConfig.paths.books)
       (hostBindMount storageConfig.paths.musicOpusElectronic)
+      (hostBindMount storageConfig.paths.musicMp3Electronic)
     ];
 
     config =
@@ -74,6 +75,14 @@ in
               type = "sendonly";
               devices = [
                 config.services.syncthing.devices.Smartphone.name
+              ];
+            };
+            music-mp3-electronic = {
+              label = "Music (MP3) - Electronic";
+              path = toString storageConfig.paths.musicMp3Electronic;
+              type = "sendreceive";
+              devices = [
+                config.services.syncthing.devices.Tersicore.name
               ];
             };
           };
