@@ -82,6 +82,12 @@ in {
         type = types.str;
         default = "${cfg.pools.storage}/music/electronic";
       };
+
+      # Scratch datasets
+      musicOpusElectronic = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.scratch}/music-opus/electronic";
+      };
     };
 
     paths = {
@@ -103,6 +109,12 @@ in {
       musicElectronic = lib.mkOption {
         type = types.path;
         default = /mnt/storage/music/electronic;
+      };
+
+      # Scratch mount points
+      musicOpusElectronic = lib.mkOption {
+        type = types.path;
+        default = /mnt/scratch/music-opus/electronic;
       };
     };
 
@@ -136,10 +148,12 @@ in {
         let
           booksPath = toString cfg.paths.books;
           musicElectronicPath = toString cfg.paths.musicElectronic;
+          musicOpusElectronicPath = toString cfg.paths.musicOpusElectronic;
         in
           mergeAttrsets [
             (zfsFileSystem' cfg.datasets.books booksPath)
             (zfsFileSystem' cfg.datasets.musicElectronic musicElectronicPath)
+            (zfsFileSystem' cfg.datasets.musicOpusElectronic musicOpusElectronicPath)
           ];
     in {
       fileSystems = mergeAttrsets [

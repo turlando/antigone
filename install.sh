@@ -269,3 +269,22 @@ zpool create                                        \
       -O keyformat=passphrase -O keylocation=prompt \
       scratch                                       \
       $SCRATCH_DISK_1 $SCRATCH_DISK_2
+
+# Music (Opus)
+# ~~~~~~~~~~~~
+
+zfs create scratch/music-opus
+
+# Electronic
+# ----------
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    scratch/music-opus/electronic
+
+mkdir -p /mnt/scratch/music-opus/electronic
+mount -t zfs scratch/music-opus/electronic /mnt/scratch/music-opus/electronic
+chown root:storage /mnt/scratch/music-opus/electronic
+chmod g+s /mnt/scratch/music-opus/electronic
+setfacl -m g:storage:rwX /mnt/scratch/music-opus/electronic
