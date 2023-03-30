@@ -199,6 +199,20 @@ chown root:storage /mnt/storage/books
 chmod g+s /mnt/storage/books
 setfacl -m g:storage:rwX /mnt/storage/books
 
+# Papers
+# ~~~~~~
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    storage/papers
+
+mkdir -p /mnt/storage/papers
+mount -t zfs storage/papers /mnt/storage/papers
+chown root:storage /mnt/storage/papers
+chmod g+s /mnt/storage/papers
+setfacl -m g:storage:rwX /mnt/storage/papers
+
 # Music
 # ~~~~~
 

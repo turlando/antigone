@@ -29,6 +29,7 @@ in
       resolvBindMount
       (dataBindMount name)
       (hostBindMount storageConfig.paths.books)
+      (hostBindMount storageConfig.paths.papers)
       (hostBindMount storageConfig.paths.musicOpusElectronic)
       (hostBindMount storageConfig.paths.musicMp3Electronic)
     ];
@@ -63,6 +64,15 @@ in
             books = {
               label = "Books";
               path = toString storageConfig.paths.books;
+              type = "sendonly";
+              devices = [
+                config.services.syncthing.devices.Bahnhof.name
+                config.services.syncthing.devices.Tablet.name
+              ];
+            };
+            papers = {
+              label = "Papers";
+              path = toString storageConfig.paths.papers;
               type = "sendonly";
               devices = [
                 config.services.syncthing.devices.Bahnhof.name

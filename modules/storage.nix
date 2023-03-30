@@ -78,6 +78,11 @@ in {
         type = types.str;
         default = "${cfg.pools.storage}/books";
       };
+      papers = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.storage}/papers";
+      };
+
       musicElectronic = lib.mkOption {
         type = types.str;
         default = "${cfg.pools.storage}/music/electronic";
@@ -109,6 +114,10 @@ in {
       books = lib.mkOption {
         type = types.path;
         default = /mnt/storage/books;
+      };
+      papers = lib.mkOption {
+        type = types.path;
+        default = /mnt/storage/papers;
       };
       musicElectronic = lib.mkOption {
         type = types.path;
@@ -155,12 +164,14 @@ in {
       storageFileSystems =
         let
           booksPath = toString cfg.paths.books;
+          papersPath = toString cfg.paths.papers;
           musicElectronicPath = toString cfg.paths.musicElectronic;
           musicOpusElectronicPath = toString cfg.paths.musicOpusElectronic;
           musicMp3ElectronicPath = toString cfg.paths.musicMp3Electronic;
         in
           mergeAttrsets [
             (zfsFileSystem' cfg.datasets.books booksPath)
+            (zfsFileSystem' cfg.datasets.papers papersPath)
             (zfsFileSystem' cfg.datasets.musicElectronic musicElectronicPath)
             (zfsFileSystem' cfg.datasets.musicOpusElectronic musicOpusElectronicPath)
             (zfsFileSystem' cfg.datasets.musicMp3Electronic musicMp3ElectronicPath)
@@ -219,6 +230,7 @@ in {
             # "${cfg.datasets.state}" = dailyCfg;
             "${cfg.datasets.serviceQuassel}" = dailyCfg;
             "${cfg.datasets.books}" = dailyCfg;
+            "${cfg.datasets.papers}" = dailyCfg;
             "${cfg.datasets.musicElectronic}" = dailyCfg;
             "${cfg.pools.backup}" = backupCfg;
           };
@@ -249,6 +261,8 @@ in {
             { target = addBackupPrefix cfg.datasets.serviceQuassel; } // common;
           "${cfg.datasets.books}" =
             { target = addBackupPrefix cfg.datasets.books; } // common;
+          "${cfg.datasets.papers}" =
+            { target = addBackupPrefix cfg.datasets.papers; } // common;
           "${cfg.datasets.musicElectronic}" =
             { target = addBackupPrefix cfg.datasets.musicElectronic; } // common;
         };
