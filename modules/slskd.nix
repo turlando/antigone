@@ -1,4 +1,4 @@
-{ config, lib, localPkgs }:
+{ config, lib, localPkgs, ... }:
 
 let
   cfg = config.services.slskd;
@@ -39,7 +39,7 @@ in {
       };
     };
 
-    users.groups = optionalAttrs (cfg.user == null) {
+    users.groups = lib.optionalAttrs (cfg.user == null) {
       slskd = {
         name = "slskd";
         gid = config.ids.gids.slskd;
