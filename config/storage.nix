@@ -56,10 +56,6 @@ in {
         type = types.str;
         default = "${cfg.pools.system}/state";
       };
-      home = lib.mkOption {
-        type = types.str;
-        default = "${cfg.pools.system}/home";
-      };
       services = lib.mkOption {
         type = types.str;
         default = "${cfg.pools.system}/services";
@@ -71,6 +67,14 @@ in {
       serviceSyncthing = lib.mkOption {
         type = types.str;
         default = "${cfg.datasets.services}/syncting";
+      };
+      podman = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.system}/podman";
+      };
+      home = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.system}/home";
       };
 
       # Storage datasets

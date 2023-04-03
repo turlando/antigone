@@ -8,6 +8,7 @@
     ./network.nix
     ./users.nix
     ./packages.nix
+    ./virtualisation.nix
     ./alerting.nix
 
     ./services

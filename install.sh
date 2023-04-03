@@ -152,6 +152,11 @@ zfs create                    \
 mkdir -p /var/services/syncthing
 mount -t zfs system/services/syncthing /var/services/syncthing
 
+# Podman containers
+# ~~~~~~~~~~~~~~~~~
+
+zfs create system/podman
+
 # Storage
 # =======
 
