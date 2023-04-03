@@ -152,6 +152,18 @@ zfs create                    \
 mkdir -p /var/services/syncthing
 mount -t zfs system/services/syncthing /var/services/syncthing
 
+# slskd
+# ~~~~~
+
+zfs create                    \
+    -o acltype=posixacl       \
+    -o mountpoint=legacy      \
+    system/services/slskd
+
+mkdir -p /var/services/slskd
+mount -t zfs system/services/slskd /var/services/slskd
+chown 327:327 /var/services/slskd
+
 # Podman containers
 # ~~~~~~~~~~~~~~~~~
 
@@ -326,3 +338,20 @@ mount -t zfs scratch/music-mp3/electronic /mnt/scratch/music-mp3/electronic
 chown root:storage /mnt/scratch/music-mp3/electronic
 chmod g+s /mnt/scratch/music-mp3/electronic
 setfacl -m g:storage:rwX /mnt/scratch/music-mp3/electronic
+
+# Downloads
+# ~~~~~~~~~
+
+zfs create scratch/downloads
+
+# Slskd
+# -----
+
+zfs create               \
+    -o acltype=posixacl  \
+    -o mountpoint=legacy \
+    scratch/downloads/slskd
+
+mkdir -p /mnt/scratch/downloads/slskd
+mount -t zfs scratch/downloads/slskd /mnt/scratch/downloads/slskd
+chown 327:327 /mnt/scratch/downloads/slskd

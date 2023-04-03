@@ -101,6 +101,10 @@ in {
         type = types.str;
         default = "${cfg.pools.scratch}/music-mp3/electronic";
       };
+      downloadsSlskd = lib.mkOption {
+        type = types.str;
+        default = "${cfg.pools.scratch}/downloads/slskd";
+      };
     };
 
     paths = {
@@ -137,6 +141,10 @@ in {
         type = types.path;
         default = /mnt/scratch/music-mp3/electronic;
       };
+      downloadsSlskd = lib.mkOption {
+        type = types.path;
+        default = /mnt/scratch/downloads/slskd;
+      };
     };
 
     ephemeralRoot = lib.mkOption {
@@ -170,21 +178,30 @@ in {
           booksPath = toString cfg.paths.books;
           papersPath = toString cfg.paths.papers;
           musicElectronicPath = toString cfg.paths.musicElectronic;
-          musicOpusElectronicPath = toString cfg.paths.musicOpusElectronic;
-          musicMp3ElectronicPath = toString cfg.paths.musicMp3Electronic;
         in
           mergeAttrsets [
             (zfsFileSystem' cfg.datasets.books booksPath)
             (zfsFileSystem' cfg.datasets.papers papersPath)
             (zfsFileSystem' cfg.datasets.musicElectronic musicElectronicPath)
+          ];
+
+      scratchFileSystems =
+        let
+          musicOpusElectronicPath = toString cfg.paths.musicOpusElectronic;
+          musicMp3ElectronicPath = toString cfg.paths.musicMp3Electronic;
+          downloadsSlskdPath = toString cfg.paths.downloadsSlskd;
+        in
+          mergeAttrsets [
             (zfsFileSystem' cfg.datasets.musicOpusElectronic musicOpusElectronicPath)
             (zfsFileSystem' cfg.datasets.musicMp3Electronic musicMp3ElectronicPath)
+            (zfsFileSystem' cfg.datasets.downloadsSlskd downloadsSlskdPath)
           ];
     in {
       fileSystems = mergeAttrsets [
         bootFileSystems
         systemFileSystems
         storageFileSystems
+        scratchFileSystems
       ];
 
       boot.initrd.postDeviceCommands = mkIf cfg.ephemeralRoot (mkAfter ''
