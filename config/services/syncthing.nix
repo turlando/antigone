@@ -21,6 +21,11 @@ in
     (serviceFileSystem name)
   ];
 
+  networking.firewall = {
+    allowedTCPPorts = [ 22000 ];
+    allowedUDPPorts = [ 21027 22000 ];
+  };
+
   containers."${name}" = {
     ephemeral = true;
     autoStart = true;
@@ -51,6 +56,7 @@ in
           enable = true;
           configDir = toString dataPath;
           guiAddress = "127.0.0.1:8383";
+          openDefaultPorts = true;
 
           devices = {
             Antigone.id = antigoneId;
