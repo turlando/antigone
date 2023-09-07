@@ -338,6 +338,7 @@ mount -t zfs scratch/music-mp3/electronic /mnt/scratch/music-mp3/electronic
 chown root:storage /mnt/scratch/music-mp3/electronic
 chmod g+s /mnt/scratch/music-mp3/electronic
 setfacl -m g:storage:rwX /mnt/scratch/music-mp3/electronic
+setfacl -d -m u::rwX,g::rwX,o::rX /mnt/scratch/music-mp3/electronic
 
 # Downloads
 # ~~~~~~~~~
