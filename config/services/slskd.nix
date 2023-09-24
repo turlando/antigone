@@ -11,7 +11,7 @@ let
   version = "0.17.5";
 
   httpPort = 5030;
-  soulseekNetPort = 50300;
+  soulseekNetPort = 23530;
 
   uid = 327;
   gid = 327;
@@ -78,8 +78,8 @@ in
         (volumeBindRo storageCfg.paths.musicElectronic)
       ];
     ports = [
-      "${toString httpPort}:5030"
-      "${toString soulseekNetPort}:50300"
+      "${toString httpPort}:${toString httpPort}"
+      "${toString soulseekNetPort}:${toString soulseekNetPort}"
     ];
     autoStart = true;
   };
